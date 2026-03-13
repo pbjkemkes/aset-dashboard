@@ -22,35 +22,13 @@ h4 {  font-weight: bold;}
     font-weight:bold;
 }
 
-/* HEADER LOGO KEMENKES */
+/* HEADER dashboard */
 
-.site-header img{
-    height:70px !important;
+.Zjiec {
+    font-size: 16pt!important;
 }
-
-img[alt="Logo"]{
-    height:70px !important;
-}
-
-h1{
-    font-size:22px !important;
-}
-
-h2{
-    font-size:14px !important;
-}
-
-/* TEKS JUDUL */
-
-.site-header h1{
-    font-size:22px !important;
-}
-
-/* SUB JUDUL */
-
-.site-header h2,
-.site-header p{
-    font-size:14px !important;
+.r9CsCb {
+  max-height: 56px!important;
 }
 
 /* Konten */
