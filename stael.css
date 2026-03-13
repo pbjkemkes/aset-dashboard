@@ -28,6 +28,18 @@ h4 {  font-weight: bold;}
     height:70px !important;
 }
 
+img[alt="Logo"]{
+    height:70px !important;
+}
+
+h1{
+    font-size:22px !important;
+}
+
+h2{
+    font-size:14px !important;
+}
+
 /* TEKS JUDUL */
 
 .site-header h1{
