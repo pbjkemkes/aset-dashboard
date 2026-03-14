@@ -126,7 +126,7 @@ table.dataTable thead th{
 /* garis pemisah RUP dan REALISASI */
 table.dataTable td:nth-child(8),
 table.dataTable th:nth-child(8){
-    border-left:1px solid #6c737a;
+    border-left:1px solid #6c737a !important;
 }
 
 /* hover tabel */
