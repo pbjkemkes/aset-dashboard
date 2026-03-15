@@ -22,9 +22,9 @@ orderCellsTop:true,
 
 dom:'lBfrtip',
 
-initComplete:function(settings,json){
-createCharts(json.data);
-},
+//initComplete:function(settings,json){
+//createCharts(json.data);
+//},
 
 language:{
 lengthMenu:"Tampilkan _MENU_ data per halaman",
