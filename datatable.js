@@ -16,7 +16,7 @@ var exportHeader = [
 
 $(document).ready(function(){
 
-$("#2024").DataTable({
+$("#tabel2024").DataTable({
 
 orderCellsTop:true,
 
