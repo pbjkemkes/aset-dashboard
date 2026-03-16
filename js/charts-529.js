@@ -153,7 +153,10 @@ borderColor:"#0b5394",
 backgroundColor:"rgba(11,83,148,0.1)",
 fill:true,
 tension:0.3,
-pointRadius:5
+
+pointRadius:5,        // ukuran titik normal
+pointHoverRadius:8,   // ukuran saat di-hover
+hitRadius:20          // area hover diperbesar
 }]
 },
 
