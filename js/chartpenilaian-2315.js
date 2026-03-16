@@ -133,7 +133,7 @@ belum += parseInt(row["tnt_bd_"+year] || 0);
 let percent=0;
 
 if((dinilai+belum)>0){
-percent=(selesai/(dinilai+belum))*100;
+percent=(dinilai/(dinilai+belum))*100;
 }
 
 values.push(percent.toFixed(2));
