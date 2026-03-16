@@ -249,3 +249,15 @@ table.dataTable th:nth-child(n+3),
 table.dataTable td:nth-child(n+3){
     width:6%px;
 }
+
+/* chart donat */
+.pieTNT,
+.piePurch{
+    width:220px !important;
+    height:220px !important;
+    margin:auto;
+}
+
+canvas{
+    margin-top:10px;
+}
