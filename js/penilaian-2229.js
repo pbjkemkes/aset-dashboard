@@ -87,7 +87,7 @@ buttons:[
 {
 extend:'excelHtml5',
 text:'<i class="fa fa-file-excel"></i> Excel',
-title:'Paket_Pengadaan_'+year,
+title:'Penilaian_Kinerja_Penyedia_'+year,
 exportOptions:{
 format:{
 header:function(data, columnIdx){
@@ -100,7 +100,7 @@ return exportHeader[columnIdx];
 {
 extend:'csvHtml5',
 text:'<i class="fa fa-file-csv"></i> CSV',
-title:'Paket_Pengadaan_'+year,
+title:'Penilaian_Kinerja_Penyedia_'+year,
 exportOptions:{
 format:{
 header:function(data, columnIdx){
@@ -114,7 +114,7 @@ return exportHeader[columnIdx];
 extend:'pdfHtml5',
 text:'<i class="fa fa-file-pdf"></i> PDF',
 orientation:'landscape',
-title:'Paket Pengadaan Tahun '+year,
+title:'Penilaian Kinerja Penyedia Tahun '+year,
 exportOptions:{
 format:{
 header:function(data, columnIdx){
@@ -149,12 +149,12 @@ targets:[2,3,4,5,6]
 },
 
 { width:"5%", targets:0 },
-{ width:"35%", targets:1 },
-{ width:"12%", targets:2 },
-{ width:"12%", targets:3 },
-{ width:"12%", targets:4 },
-{ width:"12%", targets:5 },
-{ width:"12%", targets:6 }
+{ width:"45%", targets:1 },
+{ width:"10%", targets:2 },
+{ width:"10%", targets:3 },
+{ width:"10%", targets:4 },
+{ width:"10%", targets:5 },
+{ width:"10%", targets:6 }
   
 ],
 
