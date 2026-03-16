@@ -46,11 +46,19 @@ options:{
 responsive:true,
 cutout:'50%',
 plugins:{
-legend:{
-position:'bottom',
-labels:{
-boxWidth:12,
-padding:15
+legend:{position:'bottom'},
+tooltip:{
+callbacks:{
+label:function(context){
+
+let value = context.raw;
+let dataArr = context.dataset.data;
+let sum = dataArr.reduce((a,b)=>a+b,0);
+
+let percentage = formatPercent(value/sum);
+
+return percentage+"% ("+value+" paket)";
+
 }
 }
 }
@@ -74,11 +82,19 @@ options:{
 responsive:true,
 cutout:'50%',
 plugins:{
-legend:{
-position:'bottom',
-labels:{
-boxWidth:12,
-padding:15
+legend:{position:'bottom'},
+tooltip:{
+callbacks:{
+label:function(context){
+
+let value = context.raw;
+let dataArr = context.dataset.data;
+let sum = dataArr.reduce((a,b)=>a+b,0);
+
+let percentage = formatPercent(value/sum);
+
+return percentage+"% ("+value+" paket)";
+
 }
 }
 }
