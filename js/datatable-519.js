@@ -166,7 +166,11 @@ initTable(2024);
 initTable(2025);
 initTable(2026);
 
-createTrendChart(allData);
+ let ctxTrend = document.getElementById("trendPurch");
+
+   if(ctxTrend){
+      createTrendChart(allData);
+   }
 
 },
 
