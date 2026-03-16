@@ -236,16 +236,16 @@ table.dataTable{
 
 table.dataTable th:nth-child(1),
 table.dataTable td:nth-child(1){
-    width:40px;
+    width:3%px;
 }
 
 table.dataTable th:nth-child(2),
 table.dataTable td:nth-child(2){
-    width:260px;
+    width:25%;
     white-space:normal;
 }
 
 table.dataTable th:nth-child(n+3),
 table.dataTable td:nth-child(n+3){
-    width:70px;
+    width:6%px;
 }
