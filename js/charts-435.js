@@ -62,7 +62,8 @@ backgroundColor:['#28a745','#f0ad4e']
 },
 options:{
 responsive:true,
-cutout:'55%',
+maintainAspectRatio:false,
+cutout:'50%',
 plugins:{legend:{position:'bottom'}}
 }
 });
