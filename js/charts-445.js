@@ -63,7 +63,10 @@ backgroundColor:['#28a745','#f0ad4e']
 options:{
 responsive:true,
 cutout:'50%',
-plugins:{legend:{position:'bottom'}}
+plugins:{legend:{position:'bottom',labels:{
+boxWidth:12,
+padding:15
+}}
 }
 });
 
