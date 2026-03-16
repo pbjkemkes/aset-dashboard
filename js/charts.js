@@ -26,10 +26,11 @@ if((selesaiPurch + prosesPurch) > 0){
 progress = formatPercent(selesaiPurch/(selesaiPurch+prosesPurch));
 }
 
-document.getElementById("totalPaket").innerHTML = totalPaket;
-document.getElementById("tntSelesai").innerHTML = selesaiTNT;
-document.getElementById("purchSelesai").innerHTML = selesaiPurch;
-document.getElementById("progressPurch").innerHTML = progress + "%";
+
+document.querySelector(".totalPaket").innerHTML = totalPaket;
+document.querySelector(".tntSelesai").innerHTML = selesaiTNT;
+document.querySelector(".purchSelesai").innerHTML = selesaiPurch;
+document.querySelector(".progressPurch").innerHTML = progress + "%";
 
 
 /* PIE TNT */
