@@ -67,6 +67,7 @@ function initTable(year){
 $("#tabel"+year).DataTable({
 
 data:allData,
+autoWidth:false,
 
 orderCellsTop:true,
 fixedHeader:true,
