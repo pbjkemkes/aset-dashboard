@@ -111,21 +111,42 @@ return exportHeader[columnIdx];
 {
 extend:'csvHtml5',
 text:'<i class="fa fa-file-csv"></i> CSV',
-title:'Paket_Pengadaan_'+year
+title:'Paket_Pengadaan_'+year,
+exportOptions:{
+format:{
+header:function(data, columnIdx){
+return exportHeader[columnIdx];
+}
+}
+}
 },
 
 {
 extend:'pdfHtml5',
 text:'<i class="fa fa-file-pdf"></i> PDF',
 orientation:'landscape',
-title:'Paket Pengadaan Tahun '+year
+title:'Paket Pengadaan Tahun '+year,
+exportOptions:{
+format:{
+header:function(data, columnIdx){
+return exportHeader[columnIdx];
+}
+}
+}
 },
 
 {
 extend:'print',
 text:'<i class="fa fa-print"></i> Print',
-title:'Paket Pengadaan Tahun '+year
+title:'Paket Pengadaan Tahun '+year,
+exportOptions:{
+format:{
+header:function(data, columnIdx){
+return exportHeader[columnIdx];
 }
+}
+}
+},
 
 ]
 }],
