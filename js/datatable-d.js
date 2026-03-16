@@ -40,10 +40,12 @@ render:function(row){
 
 let val=row["persenpurch_"+year];
 
-if(val===null || val===undefined) return "";
+if(val===null || val==="" || val===undefined) return "";
 
-let num=parseFloat(formatPercent(val));
 let display=formatPercent(val);
+let num=parseFloat(display);
+
+if(isNaN(num)) return "";
 
 if(num>=80)
 return '<span style="color:#2e7d32;font-weight:bold">'+display+'%</span>';
