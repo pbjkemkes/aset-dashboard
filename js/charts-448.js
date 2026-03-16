@@ -51,6 +51,8 @@ plugins:{legend:{position:'bottom'}}
 
 /* PIE PURCH */
 
+/* PIE PURCH */
+
 new Chart(document.querySelector("#tab"+year+" .piePurch"),{
 type:'doughnut',
 data:{
@@ -63,11 +65,15 @@ backgroundColor:['#28a745','#f0ad4e']
 options:{
 responsive:true,
 cutout:'50%',
-plugins:{legend:{position:'bottom',labels:{
+plugins:{
+legend:{
+position:'bottom',
+labels:{
 boxWidth:12,
 padding:15
-}}
+}
+}
+}
 }
 });
-
 }
