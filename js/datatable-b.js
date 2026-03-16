@@ -38,7 +38,7 @@ return [
 data:null,
 render:function(row){
 
-let val=row["%purch_"+year];
+let val=row["persenpurch_"+year];
 
 if(val===null || val===undefined) return "";
 
