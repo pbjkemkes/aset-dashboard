@@ -146,6 +146,8 @@ url:"https://script.google.com/macros/s/AKfycbxJEv8oYlmMbPfO8-C52ZI1INwf-3UXeeq3
 
 success:function(json){
 
+console.log(json);
+  
 if(!json || !json.data){
 console.error("Data API kosong");
 return;
