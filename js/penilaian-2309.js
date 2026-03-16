@@ -192,7 +192,7 @@ initTable(2024);
 initTable(2025);
 initTable(2026);
 
-document.querySelectorAll(".trendPurch").forEach(function(canvas){
+document.querySelectorAll(".trendNilai").forEach(function(canvas){
    createTrendChart(allData, canvas);
 });
 
