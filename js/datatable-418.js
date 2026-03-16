@@ -137,7 +137,11 @@ columns:buildColumns(year)
 });
 
 //updateSummary(year,allData);
+try{
 createCharts(year,allData);
+}catch(e){
+console.log(e);
+}
 
 }
 
