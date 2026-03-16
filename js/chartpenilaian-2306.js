@@ -74,7 +74,7 @@ return percentage+"% ("+value+" paket)";
 
 /* PIE Penilaian */
 
-new Chart(document.querySelector("#tab"+year+" .piePurch"),{
+new Chart(document.querySelector("#tab"+year+" .pieNilai"),{
 type:'doughnut',
 data:{
 labels:['Sudah Dinilai','Belum Dinilai'],
