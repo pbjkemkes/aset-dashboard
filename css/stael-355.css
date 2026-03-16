@@ -227,3 +227,25 @@ transform: scale(0.97);
     color:#374151;
     margin-bottom:5px;
 }
+
+/* lebar kolom tabel */
+table.dataTable{
+    width:100% !important;
+    table-layout:fixed;
+}
+
+table.dataTable th:nth-child(1),
+table.dataTable td:nth-child(1){
+    width:40px;
+}
+
+table.dataTable th:nth-child(2),
+table.dataTable td:nth-child(2){
+    width:260px;
+    white-space:normal;
+}
+
+table.dataTable th:nth-child(n+3),
+table.dataTable td:nth-child(n+3){
+    width:70px;
+}
