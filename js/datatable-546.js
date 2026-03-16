@@ -98,7 +98,7 @@ buttons:[
 {
 extend:'excelHtml5',
 text:'<i class="fa fa-file-excel"></i> Excel',
-title:'Paket_Pengadaan_'+year
+title:'Paket_Pengadaan_'+year,
 exportOptions:{
 format:{
 header:function(data, columnIdx){
