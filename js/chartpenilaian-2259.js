@@ -20,7 +20,7 @@ belum += parseInt(row["tnt_bd_"+year] || 0);
 
 let tntSelesai = data.reduce((sum,row)=> sum + parseInt(row["tnt_selesai_"+year] || 0),0);
 
-let progress = 0;
+let persentase = 0;
 
 if((dinilai + belum) > 0){
 persentase = formatPercent(dinilai/(dinilai+belum));
@@ -38,7 +38,7 @@ type:'doughnut',
 data:{
 labels:['Selesai','Gagal/Batal'],
 datasets:[{
-data:[selesaiTNT,gagalTNT],
+data:[selesai,gagal],
 backgroundColor:['#0b5394','#d9534f']
 }]
 },
@@ -72,16 +72,14 @@ return percentage+"% ("+value+" paket)";
 }
 });
 
-/* PIE PURCH */
-
-/* PIE PURCH */
+/* PIE Penilaian */
 
 new Chart(document.querySelector("#tab"+year+" .piePurch"),{
 type:'doughnut',
 data:{
-labels:['Selesai','Proses'],
+labels:['Sudah Dinilai','Belum Dinilai'],
 datasets:[{
-data:[selesaiPurch,prosesPurch],
+data:[dinilai,belum],
 backgroundColor:['#28a745','#f0ad4e']
 }]
 },
@@ -116,6 +114,7 @@ return percentage+"% ("+value+" paket)";
 });
 }
 
+/* trend chart */
 function createTrendChart(data, canvas){
 
 let years=[2024,2025,2026];
@@ -123,18 +122,18 @@ let values=[];
 
 years.forEach(function(year){
 
-let selesai=0;
-let proses=0;
+let dinilai=0;
+let belum=0;
 
 data.forEach(function(row){
-selesai += parseInt(row["purch_selesai_"+year] || 0);
-proses += parseInt(row["purch_proses_"+year] || 0);
+dinilai += parseInt(row["tnt_sd_"+year] || 0);
+belum += parseInt(row["tnt_bd_"+year] || 0);
 });
 
 let percent=0;
 
-if((selesai+proses)>0){
-percent=(selesai/(selesai+proses))*100;
+if((dinilai+belum)>0){
+percent=(selesai/(dinilai+belum))*100;
 }
 
 values.push(percent.toFixed(2));
