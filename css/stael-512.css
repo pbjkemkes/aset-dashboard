@@ -268,3 +268,7 @@ table.dataTable td:nth-child(n+3){
 canvas{
     margin-top:10px;
 }
+
+#trendPurch{
+height:220px !important;
+}
