@@ -127,7 +127,7 @@ return exportHeader[columnIdx];
 {
 extend:'print',
 text:'<i class="fa fa-print"></i> Print',
-title:'Paket Pengadaan Tahun '+year,
+title:'Penilaian Kinerja Penyedia Tahun '+year,
 exportOptions:{
 format:{
 header:function(data, columnIdx){
