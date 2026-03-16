@@ -63,6 +63,7 @@ return percentage+"% ("+value+" paket)";
 }
 }
 }
+}
 });
 
 /* PIE PURCH */
@@ -95,6 +96,7 @@ let percentage = formatPercent(value/sum);
 
 return percentage+"% ("+value+" paket)";
 
+}
 }
 }
 }
