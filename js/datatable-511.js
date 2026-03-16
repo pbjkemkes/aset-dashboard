@@ -166,6 +166,8 @@ initTable(2024);
 initTable(2025);
 initTable(2026);
 
+createTrendChart(allData);
+
 },
 
 error:function(err){
