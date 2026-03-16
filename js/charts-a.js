@@ -35,7 +35,7 @@ document.querySelector(".progressPurch").innerHTML = progress + "%";
 
 /* PIE TNT */
 
-new Chart(document.getElementById("pieTNT"),{
+new Chart(document.querySelector(".pieTNT"),{
 
 type:'doughnut',
 
@@ -78,7 +78,7 @@ return percentage+"% ("+value+" paket)";
 
 /* PIE PURCHASING */
 
-new Chart(document.getElementById("piePurchasing"),{
+new Chart(document.querySelector(".piePurch"),{
 
 type:'doughnut',
 
