@@ -44,7 +44,7 @@ backgroundColor:['#0b5394','#d9534f']
 },
 options:{
 responsive:true,
-cutout:'55%',
+cutout:'50%',
 plugins:{legend:{position:'bottom'}}
 }
 });
@@ -62,7 +62,6 @@ backgroundColor:['#28a745','#f0ad4e']
 },
 options:{
 responsive:true,
-maintainAspectRatio:false,
 cutout:'50%',
 plugins:{legend:{position:'bottom'}}
 }
