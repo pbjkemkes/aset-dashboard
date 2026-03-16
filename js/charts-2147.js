@@ -116,7 +116,7 @@ return percentage+"% ("+value+" paket)";
 });
 }
 
-function createTrendChart(data){
+function createTrendChart(data, canvas){
 
 let years=[2024,2025,2026];
 let values=[];
@@ -141,7 +141,11 @@ values.push(percent.toFixed(2));
 
 });
 
-new Chart(document.getElementById("trendPurch"),{
+if(canvas.chart){
+canvas.chart.destroy();
+}
+
+canvas.chart = new Chart(canvas,{
 
 type:'line',
 
@@ -153,10 +157,9 @@ borderColor:"#0b5394",
 backgroundColor:"rgba(11,83,148,0.1)",
 fill:true,
 tension:0.3,
-
-pointRadius:5,        // ukuran titik normal
-pointHoverRadius:8,   // ukuran saat di-hover
-hitRadius:20          // area hover diperbesar
+pointRadius:5,
+pointHoverRadius:8,
+hitRadius:20
 }]
 },
 
@@ -186,5 +189,4 @@ return value+"%";
 }
 
 });
-
 }
