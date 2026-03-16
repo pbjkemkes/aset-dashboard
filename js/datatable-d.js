@@ -135,8 +135,8 @@ columns:buildColumns(year)
 
 });
 
-updateSummary(year,allData);
-createCharts(year,allData);
+//updateSummary(year,allData);
+//createCharts(year,allData);
 
 }
 
