@@ -255,9 +255,9 @@ table.dataTable td:nth-child(n+3){
 .piePurch{
     width:220px !important;
     height:220px !important;
+    display:block;
     margin:auto;
 }
-
 canvas{
     margin-top:10px;
 }
