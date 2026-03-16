@@ -78,6 +78,17 @@ title:'Paket Pengadaan Tahun 2024'
 
 ajax:"https://script.google.com/macros/s/AKfycbxJEv8oYlmMbPfO8-C52ZI1INwf-3UXeeq3jIfpDbgiKaLMQsdgL_UMTprhlBEacKgW/exec",
 
+dataSrc:function(json){
+
+createCharts(json.data);
+updateSummary(json.data);
+
+return json.data;
+
+}
+
+},
+  
 pageLength:10,
 
 columnDefs:[
