@@ -214,11 +214,23 @@ transform: scale(0.97);
     background:#E6D8FF;
 }
 
+.card-penilaian{
+    background:#E6D8FF;
+}
+
 .card-purch{
     background:#D7F0DD;
 }
 
+.card-sudah{
+    background:#D7F0DD;
+}
+
 .card-progress{
+    background:#FFE5C2;
+}
+
+.card-belum{
     background:#FFE5C2;
 }
 
