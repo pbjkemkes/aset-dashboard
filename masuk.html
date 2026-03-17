@@ -6,7 +6,6 @@
 
 <title>Login Dashboard PBJ</title>
 
-<!-- Google Identity -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
@@ -38,12 +37,6 @@ margin-bottom:25px;
 color:#666;
 font-size:14px;
 }
-
-.footer{
-margin-top:20px;
-font-size:12px;
-color:#999;
-}
 </style>
 
 </head>
@@ -55,17 +48,12 @@ color:#999;
 <h2>Biro PBJ</h2>
 <div class="subtitle">Login dengan akun Google</div>
 
-<!-- WAJIB: hanya satu -->
 <div id="g_id_onload"
      data-client_id="25559214665-rh7jcb70kg23clnhmdvdd2r0j2d6k1ba.apps.googleusercontent.com"
      data-callback="handleCredentialResponse">
 </div>
 
-<div class="g_id_signin" data-type="standard"></div>
-
-<div class="footer">
-Akses hanya untuk akun Kemenkes
-</div>
+<div class="g_id_signin"></div>
 
 </div>
 
@@ -82,8 +70,8 @@ if(user){
 try{
 let data = JSON.parse(user);
 
-/* validasi email */
-if(data.email && data.email.endsWith("@kemkes.go.id")){
+/* TANPA VALIDASI DOMAIN */
+if(data.email){
 window.location.href = DASHBOARD_URL;
 return;
 }
@@ -103,15 +91,7 @@ function handleCredentialResponse(response){
 
 const data = parseJwt(response.credential);
 
-let email = data.email;
-
-/* validasi domain */
-if(!email.endsWith("@kemkes.go.id")){
-alert("Gunakan akun Kemenkes");
-return;
-}
-
-/* simpan session */
+/* langsung simpan tanpa filter */
 data.loginTime = Date.now();
 localStorage.setItem("user", JSON.stringify(data));
 
