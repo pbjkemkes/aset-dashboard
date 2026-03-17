@@ -252,7 +252,8 @@ table.dataTable td:nth-child(n+3){
 
 /* chart donat */
 .pieTNT,
-.piePurch{
+.piePurch,
+.pieNilai{
     width:220px !important;
     height:220px !important;
     display:block;
