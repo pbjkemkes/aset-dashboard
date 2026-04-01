@@ -18,12 +18,12 @@ function generateTopSatkerChart(container){
 
    let tableId = "#tabel" + year;
 
-   /* tunggu DataTables siap */
-   if(typeof $ === "undefined") return;
+   /* pastikan DataTable sudah jadi */
+   if(!window.jQuery) return;
 
-   if(!$.fn || !$.fn.DataTable) return;
+   if(!$.fn || !$.fn.dataTable) return;
 
-   if(!$.fn.DataTable.isDataTable(tableId)){
+   if(!$.fn.dataTable.isDataTable(tableId)){
 
       setTimeout(function(){
 
@@ -38,10 +38,21 @@ function generateTopSatkerChart(container){
    let table =
       $(tableId).DataTable();
 
+   /* 🔥 ambil SEMUA DATA */
    let allData =
-      table.rows().data();
+      table.rows({ search:'none' }).data();
 
-   if(!allData || allData.length === 0) return;
+   if(!allData || allData.length === 0){
+
+      setTimeout(function(){
+
+         generateTopSatkerChart(container);
+
+      },500);
+
+      return;
+
+   }
 
    let dataSatker = [];
 
@@ -79,7 +90,7 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
-   /* sorting global */
+   /* urut global */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -193,9 +204,9 @@ function generateTopSatkerChart(container){
 }
 
 
-/* jalankan pertama */
+/* 🔥 jalankan SETELAH data masuk */
 
-$(document).ready(function(){
+$(document).on('init.dt', function(){
 
    setTimeout(function(){
 
@@ -207,12 +218,12 @@ $(document).ready(function(){
 
          });
 
-   },3000);
+   },1500);
 
 });
 
 
-/* update saat pagination / search */
+/* update saat search/pagination */
 
 $(document).on('draw.dt', function(){
 
