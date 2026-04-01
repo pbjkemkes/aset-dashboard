@@ -13,7 +13,7 @@ var exportHeader = [
 "% Purchasing"
 ];
 
-let allData = [];
+window.allData = [];
 
 function buildColumns(year){
 
@@ -188,7 +188,7 @@ console.error("Data API kosong");
 return;
 }
 
-allData=json.data;
+window.allData = json.data;
 
 initTable(2024);
 initTable(2025);
