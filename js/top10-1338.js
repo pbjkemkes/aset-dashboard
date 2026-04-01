@@ -16,15 +16,14 @@ function generateTopSatkerChart(container){
 
    let year = container.dataset.year;
 
-   let table =
-      container.querySelector("table");
+   let tableId = "#tabel" + year;
 
-   if(!table) return;
+   /* tunggu DataTables siap */
+   if(typeof $ === "undefined") return;
 
-   let rows =
-      table.querySelectorAll("tbody tr");
+   if(!$.fn || !$.fn.DataTable) return;
 
-   if(rows.length === 0){
+   if(!$.fn.DataTable.isDataTable(tableId)){
 
       setTimeout(function(){
 
@@ -36,27 +35,31 @@ function generateTopSatkerChart(container){
 
    }
 
+   let table =
+      $(tableId).DataTable();
+
+   let allData =
+      table.rows().data();
+
+   if(!allData || allData.length === 0) return;
+
    let dataSatker = [];
 
-   rows.forEach(row => {
+   allData.each(function(row){
 
-      let cols =
-         row.querySelectorAll("td");
-
-      if(cols.length < 2) return;
+      if(!row || row.length < 2) return;
 
       let namaSatker =
-         cols[1].innerText;
+         row[1];
 
-      /* kolom % paling kanan */
       let persenText =
-         cols[cols.length - 1]
-         .innerText;
+         row[row.length - 1];
 
       if(!persenText) return;
 
       let persen =
          persenText
+         .toString()
          .replace("%","")
          .replace(",",".")
          .trim();
@@ -76,7 +79,7 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
-   /* sorting */
+   /* sorting global */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -190,9 +193,28 @@ function generateTopSatkerChart(container){
 }
 
 
-/* jalankan setelah tabel terisi */
+/* jalankan pertama */
 
-function waitTableReady(){
+$(document).ready(function(){
+
+   setTimeout(function(){
+
+      document
+         .querySelectorAll(".tab-content")
+         .forEach(container => {
+
+            generateTopSatkerChart(container);
+
+         });
+
+   },3000);
+
+});
+
+
+/* update saat pagination / search */
+
+$(document).on('draw.dt', function(){
 
    document
       .querySelectorAll(".tab-content")
@@ -202,11 +224,7 @@ function waitTableReady(){
 
       });
 
-   setTimeout(waitTableReady,2000);
-
-}
-
-waitTableReady();
+});
 
 
 /* update saat pindah tab */
