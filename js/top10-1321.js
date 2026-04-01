@@ -16,19 +16,19 @@ function generateTopSatkerChart(container){
 
    let year = container.dataset.year;
 
+   /* pastikan data ada */
    if(typeof data === "undefined") return;
 
-   if(!data.data) return;
+   /* data dari datapaket */
+   let rawData = data.data || data;
 
-   let rawData = data.data;
-
-   if(rawData.length === 0) return;
+   if(!rawData || rawData.length === 0) return;
 
    let dataSatker = [];
 
    rawData.forEach(function(row){
 
-      if(!row) return;
+      if(!row || row.length < 2) return;
 
       let namaSatker = row[1];
 
@@ -57,6 +57,7 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
+   /* sorting */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 = dataSatker.slice(0,10);
@@ -137,22 +138,26 @@ function generateTopSatkerChart(container){
 
       },
 
-      plugins: [ChartDataLabels]
+      plugins:
+         typeof ChartDataLabels !== "undefined"
+         ? [ChartDataLabels]
+         : []
 
    });
 
 }
 
 
-/* tunggu data siap */
+/* tunggu data benar-benar siap */
 
 function waitDataReady(){
 
-   if(
-      typeof data !== "undefined"
-      && data.data
-      && data.data.length > 0
-   ){
+   let rawData =
+      (typeof data !== "undefined")
+      ? (data.data || data)
+      : null;
+
+   if(rawData && rawData.length > 0){
 
       document.querySelectorAll(".tab-content")
          .forEach(container => {
