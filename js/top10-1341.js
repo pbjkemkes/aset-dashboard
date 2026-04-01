@@ -12,22 +12,15 @@ function createGradient(ctx){
 
 }
 
-function generateTopSatkerChart(container){
+function generateTopSatker(year){
 
-   let year = container.dataset.year;
+   let datasetName = "data" + year;
 
-   let tableId = "#tabel" + year;
-
-   /* pastikan DataTable sudah jadi */
-   if(!window.jQuery) return;
-
-   if(!$.fn || !$.fn.dataTable) return;
-
-   if(!$.fn.dataTable.isDataTable(tableId)){
+   if(typeof window[datasetName] === "undefined"){
 
       setTimeout(function(){
 
-         generateTopSatkerChart(container);
+         generateTopSatker(year);
 
       },500);
 
@@ -35,33 +28,17 @@ function generateTopSatkerChart(container){
 
    }
 
-   let table =
-      $(tableId).DataTable();
+   let rawData = window[datasetName];
 
-   /* 🔥 ambil SEMUA DATA */
-   let allData =
-      table.rows({ search:'none' }).data();
-
-   if(!allData || allData.length === 0){
-
-      setTimeout(function(){
-
-         generateTopSatkerChart(container);
-
-      },500);
-
-      return;
-
-   }
+   if(!rawData || rawData.length === 0) return;
 
    let dataSatker = [];
 
-   allData.each(function(row){
+   rawData.forEach(function(row){
 
       if(!row || row.length < 2) return;
 
-      let namaSatker =
-         row[1];
+      let namaSatker = row[1];
 
       let persenText =
          row[row.length - 1];
@@ -90,7 +67,6 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
-   /* urut global */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -101,6 +77,11 @@ function generateTopSatkerChart(container){
 
    let values =
       top10.map(d=>d.nilai);
+
+   let container =
+      document.getElementById("tab"+year);
+
+   if(!container) return;
 
    let canvas =
       container.querySelector(
@@ -113,7 +94,7 @@ function generateTopSatkerChart(container){
 
       setTimeout(function(){
 
-         generateTopSatkerChart(container);
+         generateTopSatker(year);
 
       },500);
 
@@ -204,62 +185,14 @@ function generateTopSatkerChart(container){
 }
 
 
-/* 🔥 jalankan SETELAH data masuk */
+/* jalankan untuk semua tahun */
 
-$(document).on('init.dt', function(){
+function startTopCharts(){
 
-   setTimeout(function(){
+   generateTopSatker("2026");
+   generateTopSatker("2025");
+   generateTopSatker("2024");
 
-      document
-         .querySelectorAll(".tab-content")
-         .forEach(container => {
+}
 
-            generateTopSatkerChart(container);
-
-         });
-
-   },1500);
-
-});
-
-
-/* update saat search/pagination */
-
-$(document).on('draw.dt', function(){
-
-   document
-      .querySelectorAll(".tab-content")
-      .forEach(container => {
-
-         generateTopSatkerChart(container);
-
-      });
-
-});
-
-
-/* update saat pindah tab */
-
-document
-.querySelectorAll(".tab-button")
-.forEach(btn => {
-
-   btn.addEventListener("click", function(){
-
-      let year =
-         this.dataset.year;
-
-      setTimeout(function(){
-
-         let container =
-            document.getElementById(
-               "tab"+year
-            );
-
-         generateTopSatkerChart(container);
-
-      },500);
-
-   });
-
-});
+setTimeout(startTopCharts,2000);
