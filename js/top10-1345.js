@@ -12,15 +12,23 @@ function createGradient(ctx){
 
 }
 
-function generateTopSatker(year){
+function generateTopSatkerChart(container){
 
-   let datasetName = "data" + year;
+   let year = container.dataset.year;
 
-   if(typeof window[datasetName] === "undefined"){
+   let table =
+      container.querySelector("table");
+
+   if(!table) return;
+
+   let rows =
+      table.querySelectorAll("tbody tr");
+
+   if(rows.length === 0){
 
       setTimeout(function(){
 
-         generateTopSatker(year);
+         generateTopSatkerChart(container);
 
       },500);
 
@@ -28,26 +36,26 @@ function generateTopSatker(year){
 
    }
 
-   let rawData = window[datasetName];
-
-   if(!rawData || rawData.length === 0) return;
-
    let dataSatker = [];
 
-   rawData.forEach(function(row){
+   rows.forEach(row => {
 
-      if(!row || row.length < 2) return;
+      let cols =
+         row.querySelectorAll("td");
 
-      let namaSatker = row[1];
+      if(cols.length < 2) return;
+
+      let namaSatker =
+         cols[1].innerText;
 
       let persenText =
-         row[row.length - 1];
+         cols[cols.length - 1]
+         .innerText;
 
       if(!persenText) return;
 
       let persen =
          persenText
-         .toString()
          .replace("%","")
          .replace(",",".")
          .trim();
@@ -78,11 +86,6 @@ function generateTopSatker(year){
    let values =
       top10.map(d=>d.nilai);
 
-   let container =
-      document.getElementById("tab"+year);
-
-   if(!container) return;
-
    let canvas =
       container.querySelector(
          "canvas.topSatkerPurch"
@@ -94,7 +97,7 @@ function generateTopSatker(year){
 
       setTimeout(function(){
 
-         generateTopSatker(year);
+         generateTopSatkerChart(container);
 
       },500);
 
@@ -185,14 +188,20 @@ function generateTopSatker(year){
 }
 
 
-/* jalankan untuk semua tahun */
+/* jalankan berulang sampai tabel penuh */
 
-function startTopCharts(){
+function startLoop(){
 
-   generateTopSatker("2026");
-   generateTopSatker("2025");
-   generateTopSatker("2024");
+   document
+      .querySelectorAll(".tab-content")
+      .forEach(container => {
+
+         generateTopSatkerChart(container);
+
+      });
+
+   setTimeout(startLoop,2000);
 
 }
 
-setTimeout(startTopCharts,2000);
+startLoop();
