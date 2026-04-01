@@ -5,6 +5,10 @@
 let topChartsUnit = {};
 
 
+/* ===================================== */
+/* GRADIENT                             */
+/* ===================================== */
+
 function createGradientUnit(ctx){
 
    let gradient =
@@ -17,6 +21,10 @@ function createGradientUnit(ctx){
 
 }
 
+
+/* ===================================== */
+/* NORMALISASI PERSEN                   */
+/* ===================================== */
 
 function normalizePercent(val){
 
@@ -46,6 +54,10 @@ function normalizePercent(val){
 
 }
 
+
+/* ===================================== */
+/* GENERATE CHART                       */
+/* ===================================== */
 
 function generateTopUnitChart(year){
 
@@ -137,9 +149,10 @@ function generateTopUnitChart(year){
    if(!canvas) return;
 
 
+   /* destroy lama */
+
    let chartKey =
       "unit"+year;
-
 
    if(topChartsUnit[chartKey]){
 
@@ -237,16 +250,44 @@ function generateTopUnitChart(year){
 }
 
 
+/* ===================================== */
+/* START AWAL                           */
+/* ===================================== */
+
 function startTopUnitCharts(){
 
-   [2026,2025,2024].forEach(function(year){
+   /* tab default */
 
-      generateTopUnitChart(year);
-
-   });
+   generateTopUnitChart(2026);
 
 }
 
+
+/* ===================================== */
+/* RUN SAAT TAB DIKLIK                  */
+/* ===================================== */
+
+document
+.querySelectorAll(".tab-button")
+.forEach(btn => {
+
+   btn.addEventListener("click", function(){
+
+      let year =
+         this.dataset.year;
+
+      setTimeout(function(){
+
+         generateTopUnitChart(year);
+
+      },400);
+
+   });
+
+});
+
+
+/* delay awal */
 
 setTimeout(function(){
 
