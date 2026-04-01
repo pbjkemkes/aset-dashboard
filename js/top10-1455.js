@@ -1,12 +1,12 @@
 /* ===================================== */
-/* TOP 10 SATKER REALISASI PURCHASING   */
+/* UNIVERSAL TOP 10 CHART               */
 /* ===================================== */
 
-let topSatkerCharts = {};
+let topCharts = {};
 
 
 /* ===================================== */
-/* GRADIENT WARNA BAR                   */
+/* GRADIENT                             */
 /* ===================================== */
 
 function createGradient(ctx){
@@ -23,7 +23,7 @@ function createGradient(ctx){
 
 
 /* ===================================== */
-/* NORMALISASI NILAI PERSEN             */
+/* NORMALISASI PERSEN                   */
 /* ===================================== */
 
 function normalizePercent(val){
@@ -34,7 +34,7 @@ function normalizePercent(val){
    if(isNaN(persen))
       return null;
 
-   /* jika nilai 0–1 → konversi ke 0–100 */
+   /* handle 0–1 */
 
    if(persen <= 1){
 
@@ -43,15 +43,11 @@ function normalizePercent(val){
 
    }
 
-   /* batasi maksimum */
-
    if(persen > 100){
 
       persen = 100;
 
    }
-
-   /* bulatkan 2 digit */
 
    persen =
       Math.round(persen * 100) / 100;
@@ -62,12 +58,10 @@ function normalizePercent(val){
 
 
 /* ===================================== */
-/* GENERATE TOP 10 CHART                */
+/* GENERATE TOP CHART                   */
 /* ===================================== */
 
-function generateTopChart(year){
-
-   /* tunggu data siap */
+function generateTopChart(year, fieldName, canvasClass){
 
    if(
       typeof allData === "undefined" ||
@@ -76,7 +70,11 @@ function generateTopChart(year){
 
       setTimeout(function(){
 
-         generateTopChart(year);
+         generateTopChart(
+            year,
+            fieldName,
+            canvasClass
+         );
 
       },500);
 
@@ -85,17 +83,13 @@ function generateTopChart(year){
    }
 
 
-   let dataSatker = [];
+   let dataList = [];
 
-
-   /* ================================ */
-   /* LOOP DATA GLOBAL                */
-   /* ================================ */
 
    allData.forEach(function(row){
 
-      let namaSatker =
-         row.satker;
+      let nama =
+         row[fieldName];
 
       let persenRaw =
          row["persenpurch_"+year];
@@ -113,9 +107,9 @@ function generateTopChart(year){
       if(persen === null) return;
 
 
-      dataSatker.push({
+      dataList.push({
 
-         nama  : namaSatker,
+         nama  : nama,
          nilai : persen
 
       });
@@ -123,15 +117,13 @@ function generateTopChart(year){
    });
 
 
-   if(dataSatker.length === 0)
+   if(dataList.length === 0)
       return;
 
 
-   /* ================================ */
-   /* SORTING GLOBAL                  */
-   /* ================================ */
+   /* sorting */
 
-   dataSatker.sort(function(a,b){
+   dataList.sort(function(a,b){
 
       return b.nilai - a.nilai;
 
@@ -139,28 +131,15 @@ function generateTopChart(year){
 
 
    let top10 =
-      dataSatker.slice(0,10);
+      dataList.slice(0,10);
 
 
    let labels =
-      top10.map(function(d){
-
-         return d.nama;
-
-      });
-
+      top10.map(d => d.nama);
 
    let values =
-      top10.map(function(d){
+      top10.map(d => d.nilai);
 
-         return d.nilai;
-
-      });
-
-
-   /* ================================ */
-   /* CARI CANVAS                     */
-   /* ================================ */
 
    let container =
       document.getElementById(
@@ -172,19 +151,21 @@ function generateTopChart(year){
 
    let canvas =
       container.querySelector(
-         ".topSatkerPurch"
+         canvasClass
       );
 
    if(!canvas) return;
 
 
-   /* tunggu canvas visible */
-
    if(canvas.offsetWidth === 0){
 
       setTimeout(function(){
 
-         generateTopChart(year);
+         generateTopChart(
+            year,
+            fieldName,
+            canvasClass
+         );
 
       },500);
 
@@ -193,11 +174,13 @@ function generateTopChart(year){
    }
 
 
-   /* destroy chart lama */
+   let chartKey =
+      canvasClass + year;
 
-   if(topSatkerCharts[year]){
 
-      topSatkerCharts[year].destroy();
+   if(topCharts[chartKey]){
+
+      topCharts[chartKey].destroy();
 
    }
 
@@ -210,11 +193,7 @@ function generateTopChart(year){
       createGradient(ctx);
 
 
-   /* ================================ */
-   /* CREATE CHART                    */
-   /* ================================ */
-
-   topSatkerCharts[year] =
+   topCharts[chartKey] =
       new Chart(ctx, {
 
          type : "bar",
@@ -260,27 +239,10 @@ function generateTopChart(year){
 
                   align : "right",
 
-
                   formatter : function(value){
 
                      return value
                         .toFixed(2) + "%";
-
-                  }
-
-               },
-
-
-               tooltip : {
-
-                  callbacks : {
-
-                     label : function(context){
-
-                        return context.raw
-                           .toFixed(2) + "%";
-
-                     }
 
                   }
 
@@ -318,21 +280,34 @@ function generateTopChart(year){
 
 
 /* ===================================== */
-/* START SETELAH DATA LOAD              */
+/* START ALL                            */
 /* ===================================== */
 
 function startTopCharts(){
 
-   generateTopChart(2026);
+   [2026,2025,2024].forEach(function(year){
 
-   generateTopChart(2025);
+      /* Top Satker */
 
-   generateTopChart(2024);
+      generateTopChart(
+         year,
+         "satker",
+         ".topSatkerPurch"
+      );
+
+
+      /* Top Unit Utama */
+
+      generateTopChart(
+         year,
+         "unit_utama",
+         ".topUnitPurch"
+      );
+
+   });
 
 }
 
-
-/* delay agar data API siap */
 
 setTimeout(function(){
 
