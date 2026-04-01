@@ -1,13 +1,13 @@
-/* ============================= */
-/* TOP 10 SATKER PURCHASING     */
-/* ============================= */
+/* ===================================== */
+/* TOP 10 SATKER REALISASI PURCHASING   */
+/* ===================================== */
 
 let topSatkerCharts = {};
 
 
-/* ============================= */
-/* GRADIENT WARNA BAR           */
-/* ============================= */
+/* ===================================== */
+/* GRADIENT WARNA BAR                   */
+/* ===================================== */
 
 function createGradient(ctx){
 
@@ -22,13 +22,52 @@ function createGradient(ctx){
 }
 
 
-/* ============================= */
-/* GENERATE TOP 10 CHART        */
-/* ============================= */
+/* ===================================== */
+/* NORMALISASI NILAI PERSEN             */
+/* ===================================== */
+
+function normalizePercent(val){
+
+   let persen =
+      parseFloat(val);
+
+   if(isNaN(persen))
+      return null;
+
+   /* jika nilai 0–1 → konversi ke 0–100 */
+
+   if(persen <= 1){
+
+      persen =
+         persen * 100;
+
+   }
+
+   /* batasi maksimum */
+
+   if(persen > 100){
+
+      persen = 100;
+
+   }
+
+   /* bulatkan 2 digit */
+
+   persen =
+      Math.round(persen * 100) / 100;
+
+   return persen;
+
+}
+
+
+/* ===================================== */
+/* GENERATE TOP 10 CHART                */
+/* ===================================== */
 
 function generateTopChart(year){
 
-   /* tunggu data global siap */
+   /* tunggu data siap */
 
    if(
       typeof allData === "undefined" ||
@@ -49,39 +88,29 @@ function generateTopChart(year){
    let dataSatker = [];
 
 
-   /* ============================= */
-   /* AMBIL DATA DARI allData       */
-   /* ============================= */
+   /* ================================ */
+   /* LOOP DATA GLOBAL                */
+   /* ================================ */
 
    allData.forEach(function(row){
 
       let namaSatker =
          row.satker;
 
-      let persen =
+      let persenRaw =
          row["persenpurch_"+year];
 
-
       if(
-         persen === null ||
-         persen === "" ||
-         persen === undefined
+         persenRaw === null ||
+         persenRaw === "" ||
+         persenRaw === undefined
       ) return;
 
 
-      /* konversi ke persen */
+      let persen =
+         normalizePercent(persenRaw);
 
-      persen =
-         parseFloat(persen) * 100;
-
-
-      if(isNaN(persen)) return;
-
-
-      /* bulatkan 2 digit */
-
-      persen =
-         Math.round(persen * 100) / 100;
+      if(persen === null) return;
 
 
       dataSatker.push({
@@ -98,9 +127,9 @@ function generateTopChart(year){
       return;
 
 
-   /* ============================= */
-   /* SORTING GLOBAL                */
-   /* ============================= */
+   /* ================================ */
+   /* SORTING GLOBAL                  */
+   /* ================================ */
 
    dataSatker.sort(function(a,b){
 
@@ -129,9 +158,9 @@ function generateTopChart(year){
       });
 
 
-   /* ============================= */
-   /* CARI CANVAS                   */
-   /* ============================= */
+   /* ================================ */
+   /* CARI CANVAS                     */
+   /* ================================ */
 
    let container =
       document.getElementById(
@@ -181,9 +210,9 @@ function generateTopChart(year){
       createGradient(ctx);
 
 
-   /* ============================= */
-   /* CREATE CHART                  */
-   /* ============================= */
+   /* ================================ */
+   /* CREATE CHART                    */
+   /* ================================ */
 
    topSatkerCharts[year] =
       new Chart(ctx, {
@@ -288,9 +317,9 @@ function generateTopChart(year){
 }
 
 
-/* ============================= */
-/* AUTO RUN SETELAH DATA LOAD   */
-/* ============================= */
+/* ===================================== */
+/* START SETELAH DATA LOAD              */
+/* ===================================== */
 
 function startTopCharts(){
 
