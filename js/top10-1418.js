@@ -14,12 +14,10 @@ function createGradient(ctx){
 
 function generateTopChart(year){
 
-   if(!window.jQuery) return;
+   /* cari data global */
+   let dataKey = "data" + year;
 
-   if(!$.fn || !$.fn.dataTable) return;
-
-   /* pastikan DataTable sudah ada */
-   if(!$.fn.dataTable.isDataTable("#tabel"+year)){
+   if(typeof window[dataKey] === "undefined"){
 
       setTimeout(function(){
 
@@ -31,19 +29,13 @@ function generateTopChart(year){
 
    }
 
-   /* 🔥 ambil instance existing */
-   let table =
-      $("#tabel"+year).DataTable();
+   let rawData = window[dataKey];
 
-   /* 🔥 ambil semua data (bukan halaman aktif) */
-   let allData =
-      table.rows().data();
-
-   if(!allData || allData.length === 0) return;
+   if(!rawData || rawData.length === 0) return;
 
    let dataSatker = [];
 
-   allData.each(function(row){
+   rawData.forEach(function(row){
 
       if(!row) return;
 
@@ -90,12 +82,16 @@ function generateTopChart(year){
       top10.map(d=>d.nilai);
 
    let container =
-      document.getElementById("tab"+year);
+      document.getElementById(
+         "tab"+year
+      );
 
    if(!container) return;
 
    let canvas =
-      container.querySelector(".topSatkerPurch");
+      container.querySelector(
+         ".topSatkerPurch"
+      );
 
    if(!canvas) return;
 
@@ -152,9 +148,9 @@ function generateTopChart(year){
 
             plugins: {
 
-               legend:{display:false},
+               legend: { display:false },
 
-               datalabels:{
+               datalabels: {
 
                   anchor:"end",
                   align:"right",
@@ -169,11 +165,13 @@ function generateTopChart(year){
 
             },
 
-            scales:{
+            scales: {
 
-               x:{
+               x: {
+
                   beginAtZero:true,
                   max:100
+
                }
 
             }
@@ -190,16 +188,12 @@ function generateTopChart(year){
 }
 
 
-/* 🔥 trigger setelah DataTables selesai */
+/* jalankan */
 
-$(document).on("init.dt", function(){
+setTimeout(function(){
 
-   setTimeout(function(){
+   generateTopChart("2026");
+   generateTopChart("2025");
+   generateTopChart("2024");
 
-      generateTopChart("2026");
-      generateTopChart("2025");
-      generateTopChart("2024");
-
-   },1000);
-
-});
+},2000);
