@@ -1,5 +1,5 @@
 /* ===================================== */
-/* TOP 10 UNIT UTAMA (ES1)              */
+/* TOP 10 UNIT UTAMA ES1 (FINAL FIX)    */
 /* ===================================== */
 
 let topChartsUnit = {};
@@ -56,7 +56,7 @@ function normalizePercent(val){
 
 
 /* ===================================== */
-/* GENERATE CHART                       */
+/* GENERATE PER TAHUN                   */
 /* ===================================== */
 
 function generateTopUnitChart(year){
@@ -115,6 +115,8 @@ function generateTopUnitChart(year){
       return;
 
 
+   /* sorting */
+
    dataList.sort(function(a,b){
 
       return b.nilai - a.nilai;
@@ -164,7 +166,6 @@ function generateTopUnitChart(year){
    let ctx =
       canvas.getContext("2d");
 
-
    let gradient =
       createGradientUnit(ctx);
 
@@ -183,9 +184,7 @@ function generateTopUnitChart(year){
                data : values,
 
                backgroundColor : gradient,
-
                borderRadius : 6,
-
                barThickness : 18
 
             }]
@@ -202,7 +201,9 @@ function generateTopUnitChart(year){
             plugins : {
 
                legend : {
+
                   display : false
+
                },
 
                datalabels : {
@@ -227,7 +228,6 @@ function generateTopUnitChart(year){
                x : {
 
                   beginAtZero : true,
-
                   max : 100
 
                }
@@ -251,20 +251,18 @@ function generateTopUnitChart(year){
 
 
 /* ===================================== */
-/* START AWAL                           */
+/* GENERATE DEFAULT (2026)              */
 /* ===================================== */
 
-function startTopUnitCharts(){
-
-   /* tab default */
+setTimeout(function(){
 
    generateTopUnitChart(2026);
 
-}
+},3000);
 
 
 /* ===================================== */
-/* RUN SAAT TAB DIKLIK                  */
+/* GENERATE SAAT TAB DIKLIK             */
 /* ===================================== */
 
 document
@@ -285,12 +283,3 @@ document
    });
 
 });
-
-
-/* delay awal */
-
-setTimeout(function(){
-
-   startTopUnitCharts();
-
-},2500);
