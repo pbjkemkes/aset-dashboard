@@ -34,7 +34,6 @@ function normalizePercent(val){
    if(isNaN(persen))
       return null;
 
-   /* handle 0–1 */
 
    if(persen <= 1){
 
@@ -58,10 +57,14 @@ function normalizePercent(val){
 
 
 /* ===================================== */
-/* GENERATE TOP CHART                   */
+/* GENERATE CHART                       */
 /* ===================================== */
 
-function generateTopChart(year, fieldName, canvasClass){
+function generateTopChart(
+   year,
+   fieldName,
+   canvasClass
+){
 
    if(
       typeof allData === "undefined" ||
@@ -102,7 +105,9 @@ function generateTopChart(year, fieldName, canvasClass){
 
 
       let persen =
-         normalizePercent(persenRaw);
+         normalizePercent(
+            persenRaw
+         );
 
       if(persen === null) return;
 
@@ -280,27 +285,18 @@ function generateTopChart(year, fieldName, canvasClass){
 
 
 /* ===================================== */
-/* START ALL                            */
+/* START                                */
 /* ===================================== */
 
 function startTopCharts(){
 
    [2026,2025,2024].forEach(function(year){
 
-      /* Top Satker */
+      /* UNIT UTAMA */
 
       generateTopChart(
          year,
-         "satker",
-         ".topSatkerPurch"
-      );
-
-
-      /* Top Unit Utama */
-
-      generateTopChart(
-         year,
-         "unit_utama",
+         "es1",
          ".topUnitPurch"
       );
 
