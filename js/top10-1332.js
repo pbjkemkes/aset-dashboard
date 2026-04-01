@@ -18,7 +18,6 @@ function generateTopSatkerChart(container){
 
    let tableId = "#tabel" + year;
 
-   /* pastikan DataTable sudah ada */
    if(!$.fn.DataTable.isDataTable(tableId)) return;
 
    let table =
@@ -37,7 +36,6 @@ function generateTopSatkerChart(container){
 
       let namaSatker = row[1];
 
-      /* kolom % purchasing (kolom terakhir) */
       let persen =
          row[row.length - 1];
 
@@ -64,7 +62,6 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
-   /* sorting */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -178,11 +175,25 @@ function generateTopSatkerChart(container){
 }
 
 
-/* tunggu DataTables selesai */
+/* 🔥 tunggu sampai DataTable siap */
 
-$(document).ready(function(){
+function waitUntilDataTablesReady(){
 
-   setTimeout(function(){
+   let ready = true;
+
+   document
+      .querySelectorAll(".datatable")
+      .forEach(table => {
+
+         if(!$.fn.DataTable.isDataTable(table)){
+
+            ready = false;
+
+         }
+
+      });
+
+   if(ready){
 
       document
          .querySelectorAll(".tab-content")
@@ -192,9 +203,19 @@ $(document).ready(function(){
 
          });
 
-   },3000);
+   }
+   else{
 
-});
+      setTimeout(
+         waitUntilDataTablesReady,
+         500
+      );
+
+   }
+
+}
+
+waitUntilDataTablesReady();
 
 
 /* update saat pindah tab */
