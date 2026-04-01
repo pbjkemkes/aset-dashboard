@@ -61,9 +61,11 @@ function normalizePercent(val){
 
 function generateTopUnitChart(year){
 
+   /* 🔥 FIX UTAMA */
+
    if(
-      typeof allData === "undefined" ||
-      allData.length === 0
+      typeof window.allData === "undefined" ||
+      window.allData.length === 0
    ){
 
       setTimeout(function(){
@@ -80,7 +82,7 @@ function generateTopUnitChart(year){
    let dataList = [];
 
 
-   allData.forEach(function(row){
+   window.allData.forEach(function(row){
 
       let nama =
          row.es1;
@@ -151,10 +153,9 @@ function generateTopUnitChart(year){
    if(!canvas) return;
 
 
-   /* destroy lama */
-
    let chartKey =
       "unit"+year;
+
 
    if(topChartsUnit[chartKey]){
 
@@ -165,6 +166,7 @@ function generateTopUnitChart(year){
 
    let ctx =
       canvas.getContext("2d");
+
 
    let gradient =
       createGradientUnit(ctx);
@@ -223,6 +225,7 @@ function generateTopUnitChart(year){
 
             },
 
+
             scales : {
 
                x : {
@@ -251,18 +254,33 @@ function generateTopUnitChart(year){
 
 
 /* ===================================== */
-/* GENERATE DEFAULT (2026)              */
+/* RUN SEMUA TAHUN                      */
+/* ===================================== */
+
+function startTopCharts(){
+
+   [2026,2025,2024].forEach(function(year){
+
+      generateTopUnitChart(year);
+
+   });
+
+}
+
+
+/* ===================================== */
+/* START                                */
 /* ===================================== */
 
 setTimeout(function(){
 
-   generateTopUnitChart(2026);
+   startTopCharts();
 
-},3000);
+},3500);
 
 
 /* ===================================== */
-/* GENERATE SAAT TAB DIKLIK             */
+/* RELOAD SAAT TAB CLICK                */
 /* ===================================== */
 
 document
