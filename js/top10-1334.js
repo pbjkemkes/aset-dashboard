@@ -16,33 +16,47 @@ function generateTopSatkerChart(container){
 
    let year = container.dataset.year;
 
-   let tableId = "#tabel" + year;
-
-   if(!$.fn.DataTable.isDataTable(tableId)) return;
-
    let table =
-      $(tableId).DataTable();
+      container.querySelector("table");
 
-   let allData =
-      table.rows().data();
+   if(!table) return;
 
-   if(!allData || allData.length === 0) return;
+   let rows =
+      table.querySelectorAll("tbody tr");
+
+   if(rows.length === 0){
+
+      setTimeout(function(){
+
+         generateTopSatkerChart(container);
+
+      },500);
+
+      return;
+
+   }
 
    let dataSatker = [];
 
-   allData.each(function(row){
+   rows.forEach(row => {
 
-      if(!row) return;
+      let cols =
+         row.querySelectorAll("td");
 
-      let namaSatker = row[1];
+      if(cols.length < 2) return;
+
+      let namaSatker =
+         cols[1].innerText;
+
+      /* kolom % paling kanan */
+      let persenText =
+         cols[cols.length - 1]
+         .innerText;
+
+      if(!persenText) return;
 
       let persen =
-         row[row.length - 1];
-
-      if(!persen) return;
-
-      persen = persen
-         .toString()
+         persenText
          .replace("%","")
          .replace(",",".")
          .trim();
@@ -62,6 +76,7 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
+   /* sorting */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -175,47 +190,23 @@ function generateTopSatkerChart(container){
 }
 
 
-/* 🔥 tunggu sampai DataTable siap */
+/* jalankan setelah tabel terisi */
 
-function waitUntilDataTablesReady(){
-
-   let ready = true;
+function waitTableReady(){
 
    document
-      .querySelectorAll(".datatable")
-      .forEach(table => {
+      .querySelectorAll(".tab-content")
+      .forEach(container => {
 
-         if(!$.fn.DataTable.isDataTable(table)){
-
-            ready = false;
-
-         }
+         generateTopSatkerChart(container);
 
       });
 
-   if(ready){
-
-      document
-         .querySelectorAll(".tab-content")
-         .forEach(container => {
-
-            generateTopSatkerChart(container);
-
-         });
-
-   }
-   else{
-
-      setTimeout(
-         waitUntilDataTablesReady,
-         500
-      );
-
-   }
+   setTimeout(waitTableReady,2000);
 
 }
 
-waitUntilDataTablesReady();
+waitTableReady();
 
 
 /* update saat pindah tab */
@@ -238,7 +229,7 @@ document
 
          generateTopSatkerChart(container);
 
-      },800);
+      },500);
 
    });
 
