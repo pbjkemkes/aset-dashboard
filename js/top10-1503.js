@@ -1,5 +1,5 @@
 /* ===================================== */
-/* UNIVERSAL TOP 10 CHART               */
+/* TOP 10 SATKER PURCHASING             */
 /* ===================================== */
 
 let topCharts = {};
@@ -34,7 +34,6 @@ function normalizePercent(val){
    if(isNaN(persen))
       return null;
 
-
    if(persen <= 1){
 
       persen =
@@ -60,11 +59,7 @@ function normalizePercent(val){
 /* GENERATE CHART                       */
 /* ===================================== */
 
-function generateTopChart(
-   year,
-   fieldName,
-   canvasClass
-){
+function generateTopChart(year){
 
    if(
       typeof allData === "undefined" ||
@@ -73,11 +68,7 @@ function generateTopChart(
 
       setTimeout(function(){
 
-         generateTopChart(
-            year,
-            fieldName,
-            canvasClass
-         );
+         generateTopChart(year);
 
       },500);
 
@@ -92,7 +83,7 @@ function generateTopChart(
    allData.forEach(function(row){
 
       let nama =
-         row[fieldName];
+         row.satker;   /* 🔥 ini yang benar */
 
       let persenRaw =
          row["persenpurch_"+year];
@@ -156,7 +147,7 @@ function generateTopChart(
 
    let canvas =
       container.querySelector(
-         canvasClass
+         ".topSatkerPurch"
       );
 
    if(!canvas) return;
@@ -166,11 +157,7 @@ function generateTopChart(
 
       setTimeout(function(){
 
-         generateTopChart(
-            year,
-            fieldName,
-            canvasClass
-         );
+         generateTopChart(year);
 
       },500);
 
@@ -180,7 +167,7 @@ function generateTopChart(
 
 
    let chartKey =
-      canvasClass + year;
+      "satker" + year;
 
 
    if(topCharts[chartKey]){
@@ -292,13 +279,7 @@ function startTopCharts(){
 
    [2026,2025,2024].forEach(function(year){
 
-      /* UNIT UTAMA */
-
-      generateTopChart(
-         year,
-         "es1",
-         ".topUnitPurch"
-      );
+      generateTopChart(year);
 
    });
 
