@@ -12,46 +12,14 @@ function createGradient(ctx){
 
 }
 
-function waitForTable(year){
-
-   let table =
-      document.querySelector(
-         "#tabel" + year
-      );
-
-   if(!table){
-
-      setTimeout(function(){
-
-         waitForTable(year);
-
-      },500);
-
-      return;
-
-   }
-
-   generateTopChart(year);
-
-}
-
 function generateTopChart(year){
 
-   let container =
-      document.getElementById(
-         "tab" + year
-      );
+   if(!window.jQuery) return;
 
-   if(!container) return;
+   if(!$.fn || !$.fn.dataTable) return;
 
-   let canvas =
-      container.querySelector(
-         ".topSatkerPurch"
-      );
-
-   if(!canvas) return;
-
-   if(typeof $ === "undefined"){
+   /* pastikan DataTable sudah ada */
+   if(!$.fn.dataTable.isDataTable("#tabel"+year)){
 
       setTimeout(function(){
 
@@ -63,54 +31,27 @@ function generateTopChart(year){
 
    }
 
-   let tableObj =
-      $("#tabel"+year).dataTable();
+   /* 🔥 ambil instance existing */
+   let table =
+      $("#tabel"+year).DataTable();
 
-   if(!tableObj){
-
-      setTimeout(function(){
-
-         generateTopChart(year);
-
-      },500);
-
-      return;
-
-   }
-
-   /* 🔥 ambil semua data internal */
-   let settings =
-      tableObj.fnSettings();
-
+   /* 🔥 ambil semua data (bukan halaman aktif) */
    let allData =
-      settings.aoData;
+      table.rows().data();
 
-   if(!allData || allData.length === 0){
-
-      setTimeout(function(){
-
-         generateTopChart(year);
-
-      },500);
-
-      return;
-
-   }
+   if(!allData || allData.length === 0) return;
 
    let dataSatker = [];
 
-   allData.forEach(row => {
+   allData.each(function(row){
 
-      let data =
-         row._aData;
-
-      if(!data) return;
+      if(!row) return;
 
       let namaSatker =
-         data[1];
+         row[1];
 
       let persenText =
-         data[data.length - 1];
+         row[row.length - 1];
 
       if(!persenText) return;
 
@@ -147,6 +88,16 @@ function generateTopChart(year){
 
    let values =
       top10.map(d=>d.nilai);
+
+   let container =
+      document.getElementById("tab"+year);
+
+   if(!container) return;
+
+   let canvas =
+      container.querySelector(".topSatkerPurch");
+
+   if(!canvas) return;
 
    if(canvas.offsetWidth === 0){
 
@@ -201,18 +152,16 @@ function generateTopChart(year){
 
             plugins: {
 
-               legend: {
-                  display: false
-               },
+               legend:{display:false},
 
-               datalabels: {
+               datalabels:{
 
-                  anchor: "end",
-                  align: "right",
+                  anchor:"end",
+                  align:"right",
 
-                  formatter: function(value){
+                  formatter:function(value){
 
-                     return value + "%";
+                     return value+"%";
 
                   }
 
@@ -220,13 +169,11 @@ function generateTopChart(year){
 
             },
 
-            scales: {
+            scales:{
 
-               x: {
-
-                  beginAtZero: true,
-                  max: 100
-
+               x:{
+                  beginAtZero:true,
+                  max:100
                }
 
             }
@@ -243,12 +190,16 @@ function generateTopChart(year){
 }
 
 
-/* jalankan */
+/* 🔥 trigger setelah DataTables selesai */
 
-setTimeout(function(){
+$(document).on("init.dt", function(){
 
-   waitForTable("2026");
-   waitForTable("2025");
-   waitForTable("2024");
+   setTimeout(function(){
 
-},2000);
+      generateTopChart("2026");
+      generateTopChart("2025");
+      generateTopChart("2024");
+
+   },1000);
+
+});
