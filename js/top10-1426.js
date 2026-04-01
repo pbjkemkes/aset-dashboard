@@ -14,97 +14,90 @@ function createGradient(ctx){
 
 function generateTopChart(year){
 
-   /* pastikan jQuery ada */
    if(typeof $ === "undefined"){
 
       setTimeout(function(){
-
          generateTopChart(year);
-
       },500);
 
       return;
-
    }
 
-   /* pastikan DataTables sudah siap */
    if(!$.fn.dataTable){
 
       setTimeout(function(){
-
          generateTopChart(year);
-
       },500);
 
       return;
-
    }
 
-   /* pastikan tabel sudah di-init */
    if(!$.fn.dataTable.isDataTable("#tabel"+year)){
 
       setTimeout(function(){
-
          generateTopChart(year);
-
       },500);
 
       return;
-
    }
 
    let table =
       $("#tabel"+year).DataTable();
 
-   /* 🔥 ambil semua data internal */
-   let allData =
-      table.rows().data();
+   let totalPages =
+      table.page.info().pages;
 
-   if(!allData || allData.length === 0){
-
-      setTimeout(function(){
-
-         generateTopChart(year);
-
-      },500);
-
-      return;
-
-   }
+   let originalPage =
+      table.page();
 
    let dataSatker = [];
 
-   allData.each(function(row){
+   /* 🔥 loop semua halaman */
+   for(let p=0; p<totalPages; p++){
 
-      if(!row) return;
+      table.page(p).draw('page');
 
-      let namaSatker =
-         row[1];
+      let rows =
+         table.rows({
+            page:'current'
+         }).data();
 
-      let persenText =
-         row[row.length - 1];
+      rows.each(function(row){
 
-      if(!persenText) return;
+         if(!row) return;
 
-      let persen =
-         persenText
-         .toString()
-         .replace("%","")
-         .replace(",",".")
-         .trim();
+         let namaSatker =
+            row[1];
 
-      persen = parseFloat(persen);
+         let persenText =
+            row[row.length-1];
 
-      if(isNaN(persen)) return;
+         if(!persenText) return;
 
-      dataSatker.push({
+         let persen =
+            persenText
+            .toString()
+            .replace("%","")
+            .replace(",",".")
+            .trim();
 
-         nama:namaSatker,
-         nilai:persen
+         persen = parseFloat(persen);
+
+         if(isNaN(persen)) return;
+
+         dataSatker.push({
+
+            nama:namaSatker,
+            nilai:persen
+
+         });
 
       });
 
-   });
+   }
+
+   /* kembalikan halaman awal */
+   table.page(originalPage).draw('page');
 
    if(dataSatker.length === 0) return;
 
@@ -133,13 +126,10 @@ function generateTopChart(year){
    if(canvas.offsetWidth === 0){
 
       setTimeout(function(){
-
          generateTopChart(year);
-
       },500);
 
       return;
-
    }
 
    if(topSatkerCharts[year]){
@@ -221,7 +211,7 @@ function generateTopChart(year){
 }
 
 
-/* jalankan setelah DataTables siap */
+/* jalankan setelah tabel siap */
 
 $(document).on("init.dt", function(){
 
