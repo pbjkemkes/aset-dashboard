@@ -1,0 +1,269 @@
+/* ===================================== */
+/* HEADER EXPORT                         */
+/* ===================================== */
+
+var exportHeader = [
+
+   "No",
+   "Unit Utama",
+   "Jumlah Paket (RUP)",
+   "Tender (RUP)",
+   "Non Tender (RUP)",
+   "Pencatatan Non Tender (RUP)",
+   "Purchasing (RUP)",
+   "Tender/Non Tender Selesai",
+   "Tender/Non Tender Gagal/Batal",
+   "Purchasing Selesai",
+   "Purchasing Proses",
+   "% Purchasing"
+
+];
+
+
+/* ===================================== */
+/* GLOBAL DATA                           */
+/* ===================================== */
+
+window.allData = [];
+
+
+/* ===================================== */
+/* BUILD COLUMNS                         */
+/* ===================================== */
+
+function buildColumns(year){
+
+   return [
+
+      { data:"id" },
+      { data:"es1" },
+
+      { data:"rup_"+year },
+      { data:"rup_tender_"+year },
+      { data:"rup_nontender_"+year },
+      { data:"rup_catat_"+year },
+      { data:"rup_purch_"+year },
+
+      { data:"tnt_selesai_"+year },
+      { data:"tnt_gb_"+year },
+
+      { data:"purch_selesai_"+year },
+      { data:"purch_proses_"+year },
+
+      {
+         data:null,
+
+         render:function(row){
+
+            let val =
+               row["persenpurch_"+year];
+
+            if(
+               val===null ||
+               val==="" ||
+               val===undefined
+            ) return "";
+
+            let display =
+               formatPercent(val);
+
+            let num =
+               parseFloat(display);
+
+            if(isNaN(num))
+               return "";
+
+            if(num>=80)
+
+               return '<span style="color:#2e7d32;font-weight:bold">'+display+'%</span>';
+
+            if(num>=50)
+
+               return '<span style="color:#f9a825;font-weight:bold">'+display+'%</span>';
+
+            return '<span style="color:#c62828;font-weight:bold">'+display+'%</span>';
+
+         }
+
+      }
+
+   ];
+
+}
+
+
+/* ===================================== */
+/* INIT TABLE                            */
+/* ===================================== */
+
+function initTable(year){
+
+   $("#tabel"+year).DataTable({
+
+      data: window.allData,   /* 🔥 FIX */
+
+      autoWidth:false,
+
+      orderCellsTop:true,
+      fixedHeader:true,
+      dom:'lBfrtip',
+
+      language:{
+
+         lengthMenu:"Tampilkan _MENU_ data per halaman",
+         zeroRecords:"Data tidak ditemukan",
+
+         info:"Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+
+         infoEmpty:"Tidak ada data",
+
+         infoFiltered:"(disaring dari _MAX_ total data)",
+
+         search:"Cari:",
+
+         paginate:{
+            first:"Awal",
+            last:"Akhir",
+            next:"Berikutnya",
+            previous:"Sebelumnya"
+         }
+
+      },
+
+
+      buttons:[{
+
+         extend:'collection',
+
+         text:'<i class="fa fa-download"></i> Unduh',
+
+         className:'btn btn-primary btn-sm',
+
+         buttons:[
+
+            {
+
+               extend:'excelHtml5',
+
+               text:'<i class="fa fa-file-excel"></i> Excel',
+
+               title:'Paket_Pengadaan_'+year,
+
+               exportOptions:{
+                  format:{
+                     header:function(data,columnIdx){
+
+                        return exportHeader[columnIdx];
+
+                     }
+                  }
+               }
+
+            }
+
+         ]
+
+      }],
+
+
+      pageLength:10,
+
+
+      columnDefs:[
+
+         {
+            className:"dt-right",
+
+            targets:[2,3,4,5,6,7,8,9,10,11]
+         }
+
+      ],
+
+
+      columns:buildColumns(year)
+
+   });
+
+
+   try{
+
+      createCharts(
+         year,
+         window.allData   /* 🔥 FIX */
+      );
+
+   }
+
+   catch(e){
+
+      console.log(e);
+
+   }
+
+}
+
+
+/* ===================================== */
+/* LOAD DATA                             */
+/* ===================================== */
+
+$(document).ready(function(){
+
+   $.ajax({
+
+      url:"https://script.google.com/macros/s/AKfycbxuapyY_ubuPY8TR8h981y9nKHknQ4usOBO4lG4zTombek9eToEHZzNlbjeE1Y5qEuf/exec",
+
+      success:function(json){
+
+         console.log(json);
+
+
+         if(!json || !json.data){
+
+            console.error("Data API kosong");
+
+            return;
+
+         }
+
+
+         /* 🔥 GLOBAL */
+
+         window.allData = json.data;
+
+
+         initTable(2024);
+         initTable(2025);
+         initTable(2026);
+
+
+         document
+         .querySelectorAll(".trendPurch")
+         .forEach(function(canvas){
+
+            createTrendChart(
+
+               window.allData,
+               canvas
+
+            );
+
+         });
+
+      },
+
+
+      error:function(err){
+
+         console.error(
+
+            "Gagal mengambil data:",
+            err
+
+         );
+
+      }
+
+   });
+
+});
