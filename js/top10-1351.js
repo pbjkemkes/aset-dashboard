@@ -14,17 +14,37 @@ function createGradient(ctx){
 
 function generateTopSatkerChart(container){
 
-   let year = container.dataset.year;
+   let year =
+      container.dataset.year;
+
+   let tableId =
+      "#tabel" + year;
+
+   /* tunggu DataTables siap */
+   if(!window.jQuery) return;
+
+   if(!$.fn.dataTable) return;
+
+   if(!$.fn.dataTable.isDataTable(tableId)){
+
+      setTimeout(function(){
+
+         generateTopSatkerChart(container);
+
+      },500);
+
+      return;
+
+   }
 
    let table =
-      container.querySelector("table");
+      $(tableId).DataTable();
 
-   if(!table) return;
+   /* 🔥 AMBIL SEMUA DATA */
+   let allData =
+      table.rows().data();
 
-   let rows =
-      table.querySelectorAll("tbody tr");
-
-   if(rows.length === 0){
+   if(!allData || allData.length === 0){
 
       setTimeout(function(){
 
@@ -38,24 +58,21 @@ function generateTopSatkerChart(container){
 
    let dataSatker = [];
 
-   rows.forEach(row => {
+   allData.each(function(row){
 
-      let cols =
-         row.querySelectorAll("td");
-
-      if(cols.length < 2) return;
+      if(!row || row.length < 2) return;
 
       let namaSatker =
-         cols[1].innerText;
+         row[1];
 
       let persenText =
-         cols[cols.length - 1]
-         .innerText;
+         row[row.length - 1];
 
       if(!persenText) return;
 
       let persen =
          persenText
+         .toString()
          .replace("%","")
          .replace(",",".")
          .trim();
@@ -75,6 +92,7 @@ function generateTopSatkerChart(container){
 
    if(dataSatker.length === 0) return;
 
+   /* sorting global */
    dataSatker.sort((a,b)=>b.nilai-a.nilai);
 
    let top10 =
@@ -188,20 +206,47 @@ function generateTopSatkerChart(container){
 }
 
 
-/* jalankan berulang sampai tabel penuh */
+/* jalankan setelah DataTables selesai */
 
-function startLoop(){
+$(document).on("init.dt", function(){
 
-   document
-      .querySelectorAll(".tab-content")
-      .forEach(container => {
+   setTimeout(function(){
+
+      document
+         .querySelectorAll(".tab-content")
+         .forEach(container => {
+
+            generateTopSatkerChart(container);
+
+         });
+
+   },1000);
+
+});
+
+
+/* update saat pindah tab */
+
+document
+.querySelectorAll(".tab-button")
+.forEach(btn => {
+
+   btn.addEventListener("click", function(){
+
+      let year =
+         this.dataset.year;
+
+      setTimeout(function(){
+
+         let container =
+            document.getElementById(
+               "tab"+year
+            );
 
          generateTopSatkerChart(container);
 
-      });
+      },500);
 
-   setTimeout(startLoop,2000);
+   });
 
-}
-
-startLoop();
+});
