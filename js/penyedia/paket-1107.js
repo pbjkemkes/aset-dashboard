@@ -3,6 +3,7 @@
 /* ===================================== */
 
 let tables = {};
+let chartsTop = {};
 let loadedTables = {};
 
 
@@ -105,8 +106,6 @@ function initTable(
    let table =
       $("#"+year).DataTable({
 
-         /* SERVER SIDE */
-
          serverSide:true,
          processing:true,
 
@@ -177,6 +176,134 @@ function initTable(
       });
 
    tables[year] = table;
+
+   createTopChart(year);
+
+   table.on("draw",function(){
+
+      updateTopChart(year);
+
+   });
+
+
+   document
+      .getElementById("metode"+year)
+      .addEventListener("change",function(){
+
+         updateTopChart(year);
+
+      });
+
+}
+
+
+
+/* ===================================== */
+/* CREATE CHART */
+/* ===================================== */
+
+function createTopChart(year){
+
+   let ctx =
+      document
+      .getElementById("chartTop"+year)
+      .getContext("2d");
+
+   chartsTop[year] =
+      new Chart(ctx,{
+
+         type:"bar",
+
+         data:{
+            labels:[],
+            datasets:[{
+               data:[],
+               borderRadius:6,
+               barThickness:18
+            }]
+         },
+
+         options:{
+
+            indexAxis:"y",
+
+            responsive:true,
+
+            layout:{
+               padding:{
+                  right:60
+               }
+            },
+
+            plugins:{
+               legend:{display:false},
+
+               datalabels:{
+                  anchor:"end",
+                  align:"right",
+                  clip:false
+               }
+            }
+
+         },
+
+         plugins:[ChartDataLabels]
+
+      });
+
+}
+
+
+
+/* ===================================== */
+/* UPDATE CHART */
+/* ===================================== */
+
+function updateTopChart(year){
+
+   let table =
+      tables[year];
+
+   if (!table) return;
+
+   let metode =
+      document
+      .getElementById("metode"+year)
+      .value;
+
+   let field;
+
+   if (metode==="tender")
+      field="jml_tender_"+year;
+
+   if (metode==="nontender")
+      field="jml_nontender_"+year;
+
+   if (metode==="purch")
+      field="jml_purch_"+year;
+
+   if (metode==="total")
+      field="jml_paket_"+year;
+
+
+   let data =
+      table.rows().data().toArray();
+
+   data.sort((a,b)=>
+      (b[field]||0) -
+      (a[field]||0)
+   );
+
+   let top10 =
+      data.slice(0,10);
+
+   chartsTop[year].data.labels =
+      top10.map(d=>d.penyedia);
+
+   chartsTop[year].data.datasets[0].data =
+      top10.map(d=>d[field]);
+
+   chartsTop[year].update();
 
 }
 
