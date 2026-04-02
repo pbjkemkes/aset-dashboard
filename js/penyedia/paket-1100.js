@@ -2,7 +2,6 @@
 /* GLOBAL */
 /* ===================================== */
 
-let chartsTop = {};
 let tables = {};
 let loadedTables = {};
 
@@ -92,106 +91,6 @@ function loadYear(year){
 
 
 /* ===================================== */
-/* CREATE CHART */
-/* ===================================== */
-
-function createTopChart(year){
-
-   let ctx =
-      document
-      .getElementById("chartTop"+year)
-      .getContext("2d");
-
-   chartsTop[year] =
-      new Chart(ctx,{
-
-         type:"bar",
-
-         data:{
-            labels:[],
-            datasets:[{
-               data:[],
-               borderRadius:6,
-               barThickness:18
-            }]
-         },
-
-         options:{
-
-            indexAxis:"y",
-
-            layout:{
-               padding:{
-                  right:60
-               }
-            },
-
-            scales:{
-               x:{
-                  grace:'10%'
-               }
-            },
-
-            plugins:{
-               legend:{display:false},
-
-               datalabels:{
-                  anchor:"end",
-                  align:"right",
-                  clip:false
-               }
-            }
-
-         },
-
-         plugins:[ChartDataLabels]
-
-      });
-
-}
-
-
-
-/* ===================================== */
-/* UPDATE CHART */
-/* ===================================== */
-
-function updateTopChart(year){
-
-   let table =
-      tables[year];
-
-   let metode =
-      document
-      .getElementById("metode"+year)
-      .value;
-
-   let data =
-      table.rows({search:'applied'})
-      .data()
-      .toArray();
-
-   data.sort((a,b)=>
-      (b[metode]||0) -
-      (a[metode]||0)
-   );
-
-   let top10 =
-      data.slice(0,10);
-
-   chartsTop[year].data.labels =
-      top10.map(d=>d.penyedia);
-
-   chartsTop[year].data.datasets[0].data =
-      top10.map(d=>d[metode]);
-
-   chartsTop[year].update();
-
-}
-
-
-
-/* ===================================== */
 /* INIT TABLE */
 /* ===================================== */
 
@@ -206,7 +105,7 @@ function initTable(
    let table =
       $("#"+year).DataTable({
 
-         /* 🔥 SERVER SIDE */
+         /* SERVER SIDE */
 
          serverSide:true,
          processing:true,
@@ -220,6 +119,8 @@ function initTable(
          pageLength:25,
 
          deferRender:true,
+
+         searchDelay:500,
 
          autoWidth:false,
 
@@ -241,36 +142,41 @@ function initTable(
 
          columns:[
 
-            {data:"id"},
-            {data:"penyedia"},
-            {data:tender},
-            {data:non},
-            {data:purch},
-            {data:total}
+            {
+               title:"No",
+               data:"id"
+            },
+
+            {
+               title:"Nama Penyedia",
+               data:"penyedia"
+            },
+
+            {
+               title:"Tender",
+               data:tender
+            },
+
+            {
+               title:"Non Tender",
+               data:non
+            },
+
+            {
+               title:"Purchasing",
+               data:purch
+            },
+
+            {
+               title:"Jumlah",
+               data:total
+            }
 
          ]
 
       });
 
    tables[year] = table;
-
-   createTopChart(year);
-
-
-   table.on("draw",function(){
-
-      updateTopChart(year);
-
-   });
-
-
-   document
-   .getElementById("metode"+year)
-   .addEventListener("change",function(){
-
-      updateTopChart(year);
-
-   });
 
 }
 
