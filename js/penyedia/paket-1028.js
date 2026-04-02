@@ -1,5 +1,14 @@
 /* ===================================== */
-/* TAB SWITCH                            */
+/* GLOBAL DATA (🔥 load sekali saja) */
+/* ===================================== */
+
+let chartsTop = {};
+let globalData = null;
+let loadedTables = {};
+
+
+/* ===================================== */
+/* TAB SWITCH */
 /* ===================================== */
 
 function openTab(evt, tabId){
@@ -23,41 +32,99 @@ function openTab(evt, tabId){
    evt.currentTarget
       .classList.add("active");
 
-}
+   let year =
+      tabId.replace("tab","");
 
-
-
-/* ===================================== */
-/* GRADIENT                              */
-/* ===================================== */
-
-function createGradient(ctx){
-
-   let gradient =
-      ctx.createLinearGradient(0,0,600,0);
-
-   gradient.addColorStop(0,"#36A2EB");
-   gradient.addColorStop(1,"#4BC0C0");
-
-   return gradient;
+   loadYear(year);
 
 }
 
 
 
-let chartsTop = {};
+/* ===================================== */
+/* LOAD DATA SEKALI */
+/* ===================================== */
+
+function fetchData(){
+
+   if (globalData !== null) return;
+
+   $.getJSON(
+      "https://script.google.com/macros/s/AKfycbzIOyGINvPCWa5lp0V2bZAeWaGeOH1xl4r3wHjnZwYF4L8kuhF9rDH9E1jSSShtj8vFGg/exec",
+      function(res){
+
+         globalData = res.data;
+
+         loadYear("2026");
+
+      }
+   );
+
+}
 
 
 
 /* ===================================== */
-/* GET TOP 10                            */
+/* LOAD YEAR (lazy tab) */
+/* ===================================== */
+
+function loadYear(year){
+
+   if (loadedTables[year]) return;
+
+   if (year === "2026") {
+
+      initTable(
+         "2026",
+         "jml_tender_2026",
+         "jml_nontender_2026",
+         "jml_purch_2026",
+         "jml_paket_2026"
+      );
+
+   }
+
+   if (year === "2025") {
+
+      initTable(
+         "2025",
+         "jml_tender_2025",
+         "jml_nontender_2025",
+         "jml_purch_2025",
+         "jml_paket_2025"
+      );
+
+   }
+
+   if (year === "2024") {
+
+      initTable(
+         "2024",
+         "jml_tender_2024",
+         "jml_nontender_2024",
+         "jml_purch_2024",
+         "jml_paket_2024"
+      );
+
+   }
+
+   loadedTables[year] = true;
+
+}
+
+
+
+/* ===================================== */
+/* GET TOP 10 (lebih ringan) */
 /* ===================================== */
 
 function getTop10(table, field){
 
    let data = [];
 
-   table.rows().every(function(){
+   table
+   .rows({search:'applied'})
+   .every(function(){
 
       let row =
          this.data();
@@ -83,7 +150,7 @@ function getTop10(table, field){
 
 
 /* ===================================== */
-/* CREATE CHART                          */
+/* CREATE CHART */
 /* ===================================== */
 
 function createTopChart(year){
@@ -92,9 +159,6 @@ function createTopChart(year){
       document
       .getElementById("chartTop"+year)
       .getContext("2d");
-
-   let gradient =
-      createGradient(ctx);
 
    chartsTop[year] =
       new Chart(ctx,{
@@ -106,7 +170,6 @@ function createTopChart(year){
             datasets:[{
 
                data:[],
-               backgroundColor:gradient,
                borderRadius:6,
                barThickness:18
 
@@ -116,18 +179,20 @@ function createTopChart(year){
          options:{
 
             indexAxis:"y",
+
             layout:{
-                  padding:{
-                     right:40   // 🔥 tambah ruang kanan
-                  }
-               },
+               padding:{
+                  right:60
+               }
+            },
 
             plugins:{
                legend:{display:false},
 
                datalabels:{
                   anchor:"end",
-                  align:"right"
+                  align:"right",
+                  clip:false
                }
             }
 
@@ -142,7 +207,7 @@ function createTopChart(year){
 
 
 /* ===================================== */
-/* UPDATE CHART                          */
+/* UPDATE CHART */
 /* ===================================== */
 
 function updateTopChart(year, table, field){
@@ -163,7 +228,7 @@ function updateTopChart(year, table, field){
 
 
 /* ===================================== */
-/* INIT TABLE                            */
+/* INIT TABLE */
 /* ===================================== */
 
 function initTable(
@@ -177,43 +242,26 @@ function initTable(
    let table =
       $("#"+year).DataTable({
 
-         ajax:
-"https://script.google.com/macros/s/AKfycbzIOyGINvPCWa5lp0V2bZAeWaGeOH1xl4r3wHjnZwYF4L8kuhF9rDH9E1jSSShtj8vFGg/exec",
+         /* 🔥 gunakan data lokal */
+         data: globalData,
 
-         autoWidth: false,
+         deferRender:true,
+         processing:true,
+         searchDelay:500,
+
+         autoWidth:false,
          pageLength:25,
 
          columnDefs: [
+
            { width: "5%", targets: 0 },
            { width: "55%", targets: 1 },
            { width: "10%", targets: 2 },
            { width: "10%", targets: 3 },
            { width: "10%", targets: 4 },
            { width: "10%", targets: 5 },
+
          ],
-
-         /* 🔥 LABEL INDONESIA */
-
-         language:{
-            processing:"Memproses...",
-            search:"Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-            infoEmpty:  "Menampilkan 0 sampai 0 dari 0 data",
-            infoFiltered: "(disaring dari _MAX_ total data)",
-            loadingRecords: "Memuat...",
-            zeroRecords: "Tidak ditemukan data yang sesuai",
-            emptyTable: "Tidak ada data tersedia",
-
-            paginate:{
-               first:"Pertama",
-               previous:"Sebelumnya",
-               next:"Berikutnya",
-               last:"Terakhir"
-            }
-
-         },
-
 
          columns:[
 
@@ -275,33 +323,11 @@ function initTable(
 
 
 /* ===================================== */
-/* START                                 */
+/* START */
 /* ===================================== */
 
 $(document).ready(function(){
 
-   initTable(
-      "2026",
-      "jml_tender_2026",
-      "jml_nontender_2026",
-      "jml_purch_2026",
-      "jml_paket_2026"
-   );
-
-   initTable(
-      "2025",
-      "jml_tender_2025",
-      "jml_nontender_2025",
-      "jml_purch_2025",
-      "jml_paket_2025"
-   );
-
-   initTable(
-      "2024",
-      "jml_tender_2024",
-      "jml_nontender_2024",
-      "jml_purch_2024",
-      "jml_paket_2024"
-   );
+   fetchData();
 
 });
