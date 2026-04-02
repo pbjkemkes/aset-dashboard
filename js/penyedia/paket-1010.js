@@ -116,6 +116,11 @@ function createTopChart(year){
          options:{
 
             indexAxis:"y",
+            layout:{
+                  padding:{
+                     right:40   // 🔥 tambah ruang kanan
+                  }
+               },
 
             plugins:{
                legend:{display:false},
