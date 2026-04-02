@@ -6,9 +6,8 @@ const URL_EXEC =
 "https://script.google.com/macros/s/AKfycbzOB4mpsejQ-d6Tsl58_EZdiSRQaW0ZqtbHdbF8c9QqG1MsmPVQuG1xPDqHcFhdTC0BhA/exec";
 
 
-
 /* ============================= */
-/* TAB */
+/* TAB SWITCH */
 /* ============================= */
 
 function openTab(evt, tabId){
@@ -83,12 +82,26 @@ function initTable(year){
 
          searching:false,
 
+         pageLength:25,
+
+         /* 🔥 FIX LAYOUT */
+
+         dom:
+         '<"row"' +
+           '<"col-sm-6"l>' +
+           '<"col-sm-6"f>' +
+         '>' +
+         'rt' +
+         '<"row"' +
+           '<"col-sm-5"i>' +
+           '<"col-sm-7"p>' +
+         '>',
+
+
          ajax:{
             url:URL_EXEC,
             type:"GET"
          },
-
-         pageLength:25,
 
          columns:[
 
@@ -135,6 +148,10 @@ function createTopChart(year){
       .getElementById("chartTop"+year)
       .getContext("2d");
 
+   /* 🔥 REGISTER DATALABEL */
+
+   Chart.register(ChartDataLabels);
+
    chartsTop[year] =
       new Chart(ctx,{
 
@@ -149,13 +166,28 @@ function createTopChart(year){
          },
 
          options:{
+
             indexAxis:"y",
+
             responsive:true,
+
+            layout:{
+               padding:{
+                  right:50
+               }
+            },
+
             plugins:{
                legend:{
                   display:false
+               },
+
+               datalabels:{
+                  anchor:"end",
+                  align:"right"
                }
             }
+
          }
 
       });
@@ -183,6 +215,8 @@ function loadTop10(year){
       "&metode="+metode,
 
       function(res){
+
+         if (!res || res.length===0) return;
 
          chartsTop[year].data.labels =
             res.map(d=>d.name);
