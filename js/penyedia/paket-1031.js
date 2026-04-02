@@ -1,9 +1,10 @@
 /* ===================================== */
-/* GLOBAL DATA (🔥 load sekali saja) */
+/* GLOBAL DATA */
 /* ===================================== */
 
 let chartsTop = {};
 let globalData = null;
+let tables = {};
 let loadedTables = {};
 
 
@@ -42,30 +43,45 @@ function openTab(evt, tabId){
 
 
 /* ===================================== */
-/* LOAD DATA SEKALI */
+/* FETCH DATA SEKALI */
 /* ===================================== */
 
 function fetchData(){
 
-   if (globalData !== null) return;
+   $.ajax({
 
-   $.getJSON(
-      "https://script.google.com/macros/s/AKfycbzIOyGINvPCWa5lp0V2bZAeWaGeOH1xl4r3wHjnZwYF4L8kuhF9rDH9E1jSSShtj8vFGg/exec",
-      function(res){
+      url:
+"https://script.google.com/macros/s/AKfycbzIOyGINvPCWa5lp0V2bZAeWaGeOH1xl4r3wHjnZwYF4L8kuhF9rDH9E1jSSShtj8vFGg/exec",
+
+      method:"GET",
+
+      dataType:"json",
+
+      success:function(res){
+
+         console.log("DATA LOADED:", res);
 
          globalData = res.data;
 
+         // load tab pertama
          loadYear("2026");
 
+      },
+
+      error:function(err){
+
+         console.error("ERROR LOAD DATA:", err);
+
       }
-   );
+
+   });
 
 }
 
 
 
 /* ===================================== */
-/* LOAD YEAR (lazy tab) */
+/* LOAD YEAR */
 /* ===================================== */
 
 function loadYear(year){
@@ -115,7 +131,7 @@ function loadYear(year){
 
 
 /* ===================================== */
-/* GET TOP 10 (lebih ringan) */
+/* GET TOP 10 */
 /* ===================================== */
 
 function getTop10(table, field){
@@ -186,6 +202,12 @@ function createTopChart(year){
                }
             },
 
+            scales:{
+               x:{
+                  grace:'10%'
+               }
+            },
+
             plugins:{
                legend:{display:false},
 
@@ -242,7 +264,7 @@ function initTable(
    let table =
       $("#"+year).DataTable({
 
-         /* 🔥 gunakan data lokal */
+         /* 🔥 pakai data lokal */
          data: globalData,
 
          deferRender:true,
@@ -261,6 +283,11 @@ function initTable(
            { width: "10%", targets: 4 },
            { width: "10%", targets: 5 },
 
+           {
+              targets:[0,2,3,4,5],
+              className:"text-right"
+           }
+
          ],
 
          columns:[
@@ -276,6 +303,7 @@ function initTable(
 
       });
 
+   tables[year] = table;
 
    createTopChart(year);
 
