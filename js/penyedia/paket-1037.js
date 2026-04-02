@@ -51,7 +51,7 @@ function fetchData(){
    $.ajax({
 
       url:
-"https://script.google.com/macros/s/AKfycbzIOyGINvPCWa5lp0V2bZAeWaGeOH1xl4r3wHjnZwYF4L8kuhF9rDH9E1jSSShtj8vFGg/exec",
+"https://script.google.com/macros/s/AKfycbzOB4mpsejQ-d6Tsl58_EZdiSRQaW0ZqtbHdbF8c9QqG1MsmPVQuG1xPDqHcFhdTC0BhA/exec",
 
       method:"GET",
 
