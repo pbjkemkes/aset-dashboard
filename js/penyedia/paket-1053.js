@@ -1,9 +1,8 @@
 /* ===================================== */
-/* GLOBAL DATA */
+/* GLOBAL */
 /* ===================================== */
 
 let chartsTop = {};
-let globalData = null;
 let tables = {};
 let loadedTables = {};
 
@@ -37,44 +36,6 @@ function openTab(evt, tabId){
       tabId.replace("tab","");
 
    loadYear(year);
-
-}
-
-
-
-/* ===================================== */
-/* FETCH DATA SEKALI */
-/* ===================================== */
-
-function fetchData(){
-
-   $.ajax({
-
-      url:
-"https://script.google.com/macros/s/AKfycbzOB4mpsejQ-d6Tsl58_EZdiSRQaW0ZqtbHdbF8c9QqG1MsmPVQuG1xPDqHcFhdTC0BhA/exec",
-
-      method:"GET",
-
-      dataType:"json",
-
-      success:function(res){
-
-         console.log("DATA LOADED:", res);
-
-         globalData = res.data;
-
-         // load tab pertama
-         loadYear("2026");
-
-      },
-
-      error:function(err){
-
-         console.error("ERROR LOAD DATA:", err);
-
-      }
-
-   });
 
 }
 
@@ -131,41 +92,6 @@ function loadYear(year){
 
 
 /* ===================================== */
-/* GET TOP 10 */
-/* ===================================== */
-
-function getTop10(table, field){
-
-   let data = [];
-
-   table
-   .rows({search:'applied'})
-   .every(function(){
-
-      let row =
-         this.data();
-
-      data.push({
-
-         name :
-            row.penyedia,
-
-         value :
-            parseInt(row[field]) || 0
-
-      });
-
-   });
-
-   data.sort((a,b)=>b.value-a.value);
-
-   return data.slice(0,10);
-
-}
-
-
-
-/* ===================================== */
 /* CREATE CHART */
 /* ===================================== */
 
@@ -184,11 +110,9 @@ function createTopChart(year){
          data:{
             labels:[],
             datasets:[{
-
                data:[],
                borderRadius:6,
                barThickness:18
-
             }]
          },
 
@@ -232,16 +156,34 @@ function createTopChart(year){
 /* UPDATE CHART */
 /* ===================================== */
 
-function updateTopChart(year, table, field){
+function updateTopChart(year){
+
+   let table =
+      tables[year];
+
+   let metode =
+      document
+      .getElementById("metode"+year)
+      .value;
+
+   let data =
+      table.rows({search:'applied'})
+      .data()
+      .toArray();
+
+   data.sort((a,b)=>
+      (b[metode]||0) -
+      (a[metode]||0)
+   );
 
    let top10 =
-      getTop10(table, field);
+      data.slice(0,10);
 
    chartsTop[year].data.labels =
-      top10.map(d=>d.name);
+      top10.map(d=>d.penyedia);
 
    chartsTop[year].data.datasets[0].data =
-      top10.map(d=>d.value);
+      top10.map(d=>d[metode]);
 
    chartsTop[year].update();
 
@@ -264,24 +206,31 @@ function initTable(
    let table =
       $("#"+year).DataTable({
 
-         /* 🔥 pakai data lokal */
-         data: globalData,
+         /* 🔥 SERVER SIDE */
 
-         deferRender:true,
+         serverSide:true,
          processing:true,
-         searchDelay:500,
 
-         autoWidth:false,
+         ajax:{
+            url:
+"https://script.google.com/macros/s/AKfycbzOB4mpsejQ-d6Tsl58_EZdiSRQaW0ZqtbHdbF8c9QqG1MsmPVQuG1xPDqHcFhdTC0BhA/exec",
+            type:"GET"
+         },
+
          pageLength:25,
 
-         columnDefs: [
+         deferRender:true,
 
-           { width: "5%", targets: 0 },
-           { width: "55%", targets: 1 },
-           { width: "10%", targets: 2 },
-           { width: "10%", targets: 3 },
-           { width: "10%", targets: 4 },
-           { width: "10%", targets: 5 },
+         autoWidth:false,
+
+         columnDefs:[
+
+           { width:"5%", targets:0 },
+           { width:"55%", targets:1 },
+           { width:"10%", targets:2 },
+           { width:"10%", targets:3 },
+           { width:"10%", targets:4 },
+           { width:"10%", targets:5 },
 
            {
               targets:[0,2,3,4,5],
@@ -292,12 +241,12 @@ function initTable(
 
          columns:[
 
-            {title:"No",data:"id"},
-            {title:"Nama Penyedia",data:"penyedia"},
-            {title:"Tender",data:tender},
-            {title:"Non Tender",data:non},
-            {title:"Purchasing",data:purch},
-            {title:"Jumlah",data:total}
+            {data:"id"},
+            {data:"penyedia"},
+            {data:tender},
+            {data:non},
+            {data:purch},
+            {data:total}
 
          ]
 
@@ -308,28 +257,9 @@ function initTable(
    createTopChart(year);
 
 
-   let mapping={
-
-      tender:tender,
-      nontender:non,
-      purch:purch,
-      total:total
-
-   };
-
-
    table.on("draw",function(){
 
-      let metode=
-         document
-         .getElementById("metode"+year)
-         .value;
-
-      updateTopChart(
-         year,
-         table,
-         mapping[metode]
-      );
+      updateTopChart(year);
 
    });
 
@@ -338,11 +268,7 @@ function initTable(
    .getElementById("metode"+year)
    .addEventListener("change",function(){
 
-      updateTopChart(
-         year,
-         table,
-         mapping[this.value]
-      );
+      updateTopChart(year);
 
    });
 
@@ -356,6 +282,6 @@ function initTable(
 
 $(document).ready(function(){
 
-   fetchData();
+   loadYear("2026");
 
 });
