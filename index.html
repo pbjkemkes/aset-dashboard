@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Dashboard Peraturan</title>
+
+<link
+rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+background:#f4f6f9;
+}
+
+.card{
+
+background:white;
+
+padding:20px;
+
+border-radius:8px;
+
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+
+margin-bottom:20px;
+
+}
+
+.card h3{
+
+margin-top:0;
+
+}
+
+.stat-box{
+
+text-align:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+}
+
+canvas{
+
+max-height:350px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+<h2>Dashboard Peraturan</h2>
+
+<br>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card stat-box">
+Total Peraturan
+<h2 id="totalData">0</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card stat-box">
+Status Berlaku
+<h2 id="totalBerlaku">0</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card stat-box">
+Tidak Berlaku
+<h2 id="totalTidak">0</h2>
+</div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="card">
+
+<h3>Peraturan per Tahun</h3>
+
+<canvas id="chartTahun"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card">
+
+<h3>Peraturan per Jenis</h3>
+
+<canvas id="chartJenis"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="col-md-12">
+
+<div class="card">
+
+<h3>Peraturan Terbaru</h3>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Nama</th>
+
+<th>Tahun</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="latestTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+<script>
+
+const url =
+"https://script.google.com/macros/s/AKfycbxz4T5u8G9R_mf43WjEnGBFhAWOIIiwSgNhZ0D9eqZyN3YQOnJjOY_oRoX_4CUIKV8kGQ/exec";
+
+
+fetch(url)
+
+.then(res => res.json())
+
+.then(result => {
+
+const data = result.data;
+
+
+
+// ==================
+// HITUNG TOTAL
+// ==================
+
+document.getElementById("totalData").innerText =
+data.length;
+
+
+
+let berlaku = 0;
+
+let tidak = 0;
+
+
+
+data.forEach(row => {
+
+if(row["Status"] == "Berlaku") berlaku++;
+
+if(row["Status"] == "Tidak Berlaku") tidak++;
+
+});
+
+
+
+document.getElementById("totalBerlaku").innerText =
+berlaku;
+
+document.getElementById("totalTidak").innerText =
+tidak;
+
+
+
+// ==================
+// CHART TAHUN
+// ==================
+
+let tahunMap = {};
+
+data.forEach(row => {
+
+let th = row["Tahun"];
+
+tahunMap[th] = (tahunMap[th] || 0) + 1;
+
+});
+
+
+new Chart(
+
+document.getElementById("chartTahun"),
+
+{
+
+type: "bar",
+
+data: {
+
+labels: Object.keys(tahunMap),
+
+datasets: [{
+
+label: "Jumlah",
+
+data: Object.values(tahunMap)
+
+}]
+
+}
+
+}
+
+);
+
+
+
+// ==================
+// CHART JENIS
+// ==================
+
+let jenisMap = {};
+
+data.forEach(row => {
+
+let jenis =
+row["Jenis/Bentuk Peraturan"];
+
+jenisMap[jenis] =
+(jenisMap[jenis] || 0) + 1;
+
+});
+
+
+new Chart(
+
+document.getElementById("chartJenis"),
+
+{
+
+type: "pie",
+
+data: {
+
+labels: Object.keys(jenisMap),
+
+datasets: [{
+
+data: Object.values(jenisMap)
+
+}]
+
+}
+
+}
+
+);
+
+
+
+// ==================
+// DATA TERBARU
+// ==================
+
+data
+
+.sort((a,b) =>
+b["Tahun"] - a["Tahun"])
+
+.slice(0,10)
+
+.forEach(row => {
+
+let tr = document.createElement("tr");
+
+tr.innerHTML = `
+
+<td>
+
+<a href="detail.html?id=${row.id}">
+
+${row["Nama Peraturan"] || row["Tentang"]}
+
+</a>
+
+</td>
+
+<td>${row["Tahun"]}</td>
+
+<td>${row["Status"]}</td>
+
+`;
+
+document
+
+.getElementById("latestTable")
+
+.appendChild(tr);
+
+});
+
+
+});
+
+</script>
+
+</body>
+
+</html>
